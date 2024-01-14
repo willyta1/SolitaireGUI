@@ -1,6 +1,5 @@
 package solitaireBoard;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class Stock {
@@ -70,15 +69,17 @@ public class Stock {
 		
 	}
 	
-	public boolean findValidAddToTableau(Card card, Tableau tableau) {
+	public int findValidAddToTableau(Card card, Tableau tableau) {
+		int pileNum = 0;
 		for (ArrayList<Card> pile: tableau.getCardPiles()) {
 			if(card.value == 13 && pile.size() == 0 ) {
-				return true;
+				return pileNum;
 			} else if (card.value == pile.get(pile.size()-1).value && card.cardColor != pile.get(pile.size()-1).cardColor) {
-				return true;
+				return pileNum;
 			}
+			pileNum++;
 		}
-		return false;
+		return -1;
 	}
 	
 	public boolean findValidAddToFoundation(Card card, Foundations foundation) {

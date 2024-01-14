@@ -1,6 +1,5 @@
 package solitaireBoard;
 import java.util.ArrayList;
-import solitaireBoard.EnumCards.*;
 
 public class Foundations {
 /* 4 piles: Hearts, Diamonds, Clubs, Spades
@@ -16,7 +15,6 @@ public class Foundations {
 		}
 		
 	}
-	// should I change these to string?
 	
 	public void printFoundations() {
 		String foundationCards = "F:";

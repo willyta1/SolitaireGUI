@@ -1,5 +1,6 @@
 {
     "java.project.sourcePaths": [
-        "demo/src/solitaireBoard"
+        "demo/src/solitaireBoard",
+        "demo/src/GUI"
     ]
 }

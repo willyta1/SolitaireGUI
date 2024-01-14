@@ -95,6 +95,23 @@ public class Tableau {
 		
 	}
 	
+	public boolean findSignificantBoardMove() {
+		int pileNum = 0;
+		for(ArrayList<Card> pile: cardPiles) {
+			for (Card card: pile) {
+				for (int i = 0; i < 7; i++) {
+					if (i != pileNum && findValidTableMove(card.getCardStorageValue(), pileNum, i)) {
+						if (!pile.get(getCardIndexFromPile(card.getCardStorageValue(), pileNum)).revealed) {
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+		
+	}
+
 	public boolean findValidTableMove(String storageValue, int pileNumber, int newPileNumber) {
 		boolean foundCard = false;
 		int cardIndex = 0;
@@ -197,28 +214,19 @@ public class Tableau {
 	
 	//i need to check that the card is at the bottom of the tableau's array
 	public void addCardToFoundations(String cardStorageValue, int pileNumber, Foundations foundations) {
-		
 		int pileIndex = findFoundationPileIndex(cardStorageValue);
-		
-		if(cardPiles.get(pileNumber-1).get(cardPiles.get(pileNumber-1).size()-1).storageValue.equals(cardStorageValue)) {
-			Card copy = cardPiles.get(pileNumber-1).get(cardPiles.get(pileNumber-1).size()-1);
-			
-			if(foundations.getFoundation().get(pileIndex).isEmpty() && cardPiles.get(pileNumber-1)
-					.get(cardPiles.get(pileNumber-1).size()-1).value == 1) {
-
-				cardPiles.get(pileNumber-1).remove(copy);
-				foundations.getFoundation().get(pileIndex).add(copy);
-			} else if (foundations.getFoundation().get(pileIndex).size() > 1 && 
-					foundations.getFoundation().get(pileIndex).get(foundations.getFoundation().get(pileIndex).size()-1).value == 
-					cardPiles.get(pileNumber-1).get(cardPiles.get(pileNumber-1).size()-1).value -1) { 
+		Card copy = cardPiles.get(pileNumber-1).get(cardPiles.get(pileNumber-1).size()-1);
+		if(findValidAddToFoundation(cardStorageValue, pileNumber, foundations )) {
+			cardPiles.get(pileNumber-1).remove(copy);
+			foundations.getFoundation().get(pileIndex).add(copy);
+		}
 				
-				cardPiles.get(pileNumber-1).remove(copy);
-				foundations.getFoundation().get(pileIndex).add(copy);
+
 				
 				// repeating code, move to separate method?
 				
-			}
-		}
+			
+		
 		
 		
 		/* 1. Check the symbol via character in string (D, H, C, S)
@@ -227,6 +235,28 @@ public class Tableau {
 		 * 4. If the card can be added
 		 * 
 		 */
+	}
+
+	public boolean findValidAddToFoundation(String cardStorageValue, int pileNumber, Foundations foundations) {
+		
+		int pileIndex = findFoundationPileIndex(cardStorageValue);
+		if(cardPiles.get(pileNumber-1).get(cardPiles.get(pileNumber-1).size()-1).storageValue.equals(cardStorageValue)) {
+			
+			
+			if(foundations.getFoundation().get(pileIndex).isEmpty() && cardPiles.get(pileNumber-1)
+					.get(cardPiles.get(pileNumber-1).size()-1).value == 1) {
+						return true;
+			} else if (foundations.getFoundation().get(pileIndex).size() > 1 && 
+					foundations.getFoundation().get(pileIndex).get(foundations.getFoundation().get(pileIndex).size()-1).value == 
+					cardPiles.get(pileNumber-1).get(cardPiles.get(pileNumber-1).size()-1).value -1) { 
+						return true;
+
+				
+				// repeating code, move to separate method?
+				
+			}
+		}
+		return false;
 	}
 	
 	public int findFoundationPileIndex(String cardStorageValue) {
@@ -250,15 +280,19 @@ public class Tableau {
 		return cardPiles;
 	}
 	
-	public void copyTableau(Tableau copiedTableau, Deck deck) {
-		ArrayList<ArrayList<Card>> copyPiles = copiedTableau.getCardPiles();
+	public Tableau copyTableau(Deck deck) {
+		Tableau newTableau = new Tableau();
+		ArrayList<ArrayList<Card>> copyPiles = getCardPiles();
 		int pileIndex = 0;
 		for (ArrayList<Card> pile: copyPiles) {
 			for (Card card: pile) {
-				cardPiles.get(pileIndex).add(deck.getImageAndCard().get(card.getPngName()));
+				newTableau.getCardPiles().get(pileIndex).add(deck.getImageAndCard().get(card.getPngName()));
 			}
+			pileIndex++;
 			
 		}
+		return newTableau;
+
 	}
 	
 }
