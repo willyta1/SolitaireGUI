@@ -1,4 +1,5 @@
 package solitaireBoard;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,17 +11,15 @@ import solitaireBoard.EnumCards.*;
  * 
  */
 
-
-
 public class Deck {
 	private ArrayList<Card> deckOfCards = new ArrayList<>();
 //	private HashMap<String, Card> everyCard = new HashMap<String, Card>();
 	private HashMap<String, Card> imageAndCard = new HashMap<String, Card>();
-	
+
 	public Deck() {
 		String templateName = "_of_";
 		String pngName = "";
-		for (int i = 0; i < 4 ; i++) {
+		for (int i = 0; i < 4; i++) {
 			String symbolFileString = "";
 			symbol symbolName;
 			symbolName = symbol.Diamond;
@@ -35,8 +34,8 @@ public class Deck {
 				symbolName = symbol.Spade;
 				symbolFileString = "spades";
 			}
-			
-			for (int j = 1; j < 14; j ++) {
+
+			for (int j = 1; j < 14; j++) {
 				pngName = j + templateName + symbolFileString;
 				Card addedCard = new Card(j, symbolName, pngName);
 				deckOfCards.add(addedCard);
@@ -45,20 +44,20 @@ public class Deck {
 			}
 		}
 	}
-	
+
 	public void distributeDeck(Tableau tableau, Stock stock) {
 		Collections.shuffle(deckOfCards);
-		
+
 		int count = 0;
-		for (int i = 1; i < 8; i ++) {
+		for (int i = 1; i < 8; i++) {
 			for (int j = i; j > 0; j--) {
-				tableau.getCardPiles().get(i-1).add(deckOfCards.get(count));
-				if(j == 1) {
+				tableau.getPile(i - 1).add(deckOfCards.get(count));
+				if (j == 1) {
 					deckOfCards.get(count).setCardRevealed(true);
 				}
 				count++;
 			}
-			
+
 		}
 		for (int i = count; i < 52; i++) {
 			stock.getStock().add(deckOfCards.get(count));
@@ -66,21 +65,20 @@ public class Deck {
 			count++;
 		}
 	}
-	
-	
+
 	public void distributeAdminDeck(Tableau tableau, Stock stock) {
 //		Collections.shuffle(deckOfCards);
-		
+
 		int count = 0;
-		for (int i = 1; i < 8; i ++) {
+		for (int i = 1; i < 8; i++) {
 			for (int j = i; j > 0; j--) {
-				tableau.getCardPiles().get(i-1).add(deckOfCards.get(count));
-				if(j == 1) {
+				tableau.getPile(i - 1).add(deckOfCards.get(count));
+				if (j == 1) {
 					deckOfCards.get(count).setCardRevealed(true);
 				}
 				count++;
 			}
-			
+
 		}
 		for (int i = count; i < 52; i++) {
 			stock.getStock().add(deckOfCards.get(count));
@@ -88,13 +86,13 @@ public class Deck {
 			count++;
 		}
 	}
-	
+
 	public ArrayList<Card> getDeckOfCards() {
 		return deckOfCards;
 	}
-	
+
 	public HashMap<String, Card> getImageAndCard() {
 		return imageAndCard;
 	}
-	
+
 }

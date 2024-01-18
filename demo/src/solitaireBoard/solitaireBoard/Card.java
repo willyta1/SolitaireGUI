@@ -14,11 +14,11 @@ public class Card {
 	 * 4 Loops?
 	 * 
 	 */
-	int value;
-	String pngName;
-	String storageValue;
-	symbol symbolType;
-	color cardColor;
+	private int numValue;
+	private String pngName;
+	private String cardName;
+	symbol symbol;
+	color color;
 	char rank;
 	boolean revealed;
 	
@@ -30,50 +30,50 @@ public class Card {
 
 
 
-	public Card(int value, symbol symbol, String pngName) {
-		this.value = value;
-		symbolType = symbol;
+	public Card(int numValue, symbol symbol, String pngName) {
+		this.numValue = numValue;
+		this.symbol = symbol;
 		this.pngName = pngName;
-		storageValue = "" + value + symbol.toString().charAt(0);
+		cardName = "" + numValue + symbol.toString().charAt(0);
 		
 		this.rank = symbol.toString().charAt(0);
 		if (rank == 'D' || rank == 'H') {
-			cardColor = color.red;
+			color = color.red;
 		} else {
-			cardColor = color.black;
+			color = color.black;
 		}
 		revealed = false;
 	}
 	
-	public int getCardValue() {
-		return value;
+	public int getNumValue() {
+		return numValue;
 	}
 
-	public void setCardValue(int newValue) {
-		value = newValue;
+	public void setNumValue(int newValue) {
+		numValue = newValue;
 	}
 	
-	public String getCardStorageValue() {
-		return storageValue;
+	public String getCardName() {
+		return cardName;
 	}
 	
-	public void setCardStorageValue(String number) {
-		storageValue = number;
+	public void setCardName(String number) {
+		cardName = number;
 	}
 	
-	public symbol getCardSymbol() {
-		return symbolType;
+	public symbol getSymbol() {
+		return symbol;
 	}
-	public void setCardSymbol(symbol newSymbol) {
-		symbolType = newSymbol;
+	public void setSymbol(symbol newSymbol) {
+		symbol = newSymbol;
 	}
 	
 	
-	public color getCardColor() {
-		return cardColor;
+	public color getColor() {
+		return color;
 	}
-	public void setCardColor(color newColor) {
-		cardColor = newColor;
+	public void setColor(color newColor) {
+		color = newColor;
 	}
 	
 	public char getCardRank() {
@@ -97,7 +97,7 @@ public class Card {
 	
 	@Override
 	public String toString() {
-		return symbolType + ", " + rank + " (" + storageValue + ")"; 
+		return symbol + ", " + rank + " (" + cardName + ")"; 
 	}
 	
 	
