@@ -48,16 +48,16 @@ public class Stock {
 
 	public void addToTableau(int newPileIndex, Tableau tableau) {
 
-		
-		if(newPileIndex >= 1 && newPileIndex <= 7 && counter > -1 && counter <= pileStock.size() -1) {
+		if (newPileIndex >= 1 && newPileIndex <= 7 && counter > -1 && counter <= pileStock.size() - 1) {
 			Card currentCard = pileStock.get(counter);
-			if(currentCard.revealed ) {
+			if (currentCard.getRevealed()) {
 				if (tableau.getPile(newPileIndex - 1).size() == 0 && currentCard.getNumValue() == 13) {
 					tableau.getPile(newPileIndex - 1).add(currentCard);
 					pileStock.remove(counter);
 					counter--;
-				} else if (tableau.getPile(newPileIndex - 1).size() > 0 && tableau.getPile(newPileIndex - 1).get(tableau.getPile(newPileIndex - 1).size() - 1)
-						.getNumValue() == currentCard.getNumValue() + 1) {
+				} else if (tableau.getPile(newPileIndex - 1).size() > 0
+						&& tableau.getPile(newPileIndex - 1).get(tableau.getPile(newPileIndex - 1).size() - 1)
+								.getNumValue() == currentCard.getNumValue() + 1) {
 					if (tableau.getPile(newPileIndex - 1)
 							.get(tableau.getPile(newPileIndex - 1).size() - 1).color != currentCard.color) {
 						tableau.getPile(newPileIndex - 1).add(currentCard);
@@ -82,7 +82,7 @@ public class Stock {
 	public int findAddToTableau(Card card, Tableau tableau) {
 		int pileNum = 0;
 		for (ArrayList<Card> pile : tableau.getCardPiles()) {
-			if (card.revealed) {
+			if (card.getRevealed()) {
 				if (card.getNumValue() == 13 && pile.size() == 0) {
 					return pileNum;
 				} else if (pile.size() > 0 && card.getNumValue() == pile.get(pile.size() - 1).getNumValue() - 1
@@ -98,16 +98,16 @@ public class Stock {
 
 	public boolean findAddToFoundation(Card card, Foundations foundation) {
 		if (counter >= 0 && counter < pileStock.size()) {
-			
+
 			int getIndex = findFoundationIndex(pileStock.get(counter).getCardName());
 
 			// repeated in tableau
-			if(card.revealed) {
+			if (card.getRevealed()) {
 				if (foundation.getFoundationPile(getIndex).isEmpty() && getCurrentCard().getNumValue() == 1) {
 					return true;
-				} else if (foundation.getFoundationPile
-						(getIndex).size() > 0 && getCurrentCard() != null && getCurrentCard().getNumValue() - 1 == foundation.getFoundationPile
-						(getIndex).get(foundation.getFoundationPile(getIndex).size() - 1).getNumValue()) {
+				} else if (foundation.getFoundationPile(getIndex).size() > 0 && getCurrentCard() != null
+						&& getCurrentCard().getNumValue() - 1 == foundation.getFoundationPile(getIndex)
+								.get(foundation.getFoundationPile(getIndex).size() - 1).getNumValue()) {
 					return true;
 
 					// repeated, maybe put into method?

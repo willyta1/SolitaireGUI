@@ -1,7 +1,5 @@
 package solitaireBoard;
 
-
-
 public class Solitaire {
 
 	private Deck deck;
@@ -9,7 +7,7 @@ public class Solitaire {
 	private Stock stock;
 	private Foundations foundation;
 
-	Solitaire() {
+	public Solitaire() {
 		deck = new Deck();
 		tableau = new Tableau();
 		stock = new Stock();
@@ -17,7 +15,7 @@ public class Solitaire {
 		foundation = new Foundations();
 	}
 
-	Solitaire(int i) {
+	public Solitaire(int i) {
 		deck = new Deck();
 		tableau = new Tableau();
 		stock = new Stock();
@@ -39,7 +37,7 @@ public class Solitaire {
 				if (foundation.getFoundation().get(i).size() > 0) {
 					Card foundationLargest = foundation.getFoundation().get(i)
 							.get(foundation.getFoundation().get(i).size() - 1);
-					if (foundation.findFoundationMove(i, j, tableau)) {
+					if (foundation.findAddToTableau(i, j, tableau)) {
 						copyTableau = tableau.copyTableau(deck);
 						copyTableau.addCardInOrder(j, foundationLargest);
 						// note: i did not remove from the foundation
@@ -80,9 +78,9 @@ public class Solitaire {
 		Tableau copyTableau = new Tableau();
 		for (int i = 0; i < tableau.getCardPiles().size(); i++) {
 			for (int j = tableau.getPile(i).size() - 1; j > -1; j--) {
-				if (tableau.getPile(i).get(j).revealed) {
+				if (tableau.getPile(i).get(j).getRevealed()) {
 					for (int k = 0; k < tableau.getCardPiles().size(); k++) {
-						if (k != i && tableau.getPile(i).get(j).revealed) {
+						if (k != i && tableau.getPile(i).get(j).getRevealed()) {
 							if (tableau.findTableMove(tableau.getPile(i).get(j).getCardName(), i, k)) {
 								copyTableau = tableau.copyTableau(deck);
 								copyTableau.movePileCards(tableau.getPile(i).get(j).getCardName(), i, k);

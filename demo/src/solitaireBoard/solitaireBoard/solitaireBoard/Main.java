@@ -94,7 +94,7 @@ public class Main {
 		table.printTable();
 		stock.cycleCards();
 		stock.cycleCards();
-		
+
 		stock.addToTableau(3, table);
 		table.printTable();
 		table.movePileCards("3D", 2, 3);
@@ -109,7 +109,7 @@ public class Main {
 		table.printTable();
 		table.movePileCards("5D", 3, 4);
 		table.printTable();
-		
+
 		stock.cycleCards();
 		stock.cycleCards();
 		stock.cycleCards();
@@ -117,32 +117,28 @@ public class Main {
 		stock.cycleCards();
 		stock.cycleCards();
 
-
-
-		
 		foundation.printFoundations();
 		stock.cycleCards();
 		table.printTable();
-		
+
 		stock.addToTableau(3, table);
 		table.movePileCards("2H", 5, 3);
 		table.printTable();
-		
-		
+
 		table.addToFoundations("1H", 5, foundation);
 		foundation.printFoundations();
 		table.printTable();
-		
+
 		table.movePileCards("13D", 5, 2);
 		table.printTable();
 		stock.cycleCards();
 		stock.cycleCards();
 		stock.addToTableau(6, table);
-		
+
 		table.printTable();
 		table.movePileCards("4D", 3, 6);
 		table.printTable();
-		
+
 		stock.cycleCards();
 		stock.cycleCards();
 		stock.cycleCards();
@@ -154,14 +150,14 @@ public class Main {
 		table.printTable();
 		table.movePileCards("11H", 7, 1);
 		table.printTable();
-		
+
 		stock.cycleCards();
 		stock.cycleCards();
 		stock.cycleCards();
 		stock.cycleCards();
 		stock.cycleCards();
 		stock.cycleCards();
-		
+
 		stock.addToTableau(1, table);
 		table.printTable();
 		stock.addToTableau(7, table);
@@ -171,13 +167,13 @@ public class Main {
 		table.movePileCards("10H", 7, 5);
 		table.printTable();
 		table.movePileCards("9H", 7, 1);
-		
+
 		foundation.printFoundations();
 		table.printTable();
 		table.addToFoundations("2C", 4, foundation);
 		foundation.printFoundations();
 		table.printTable();
-		
+
 		table.addToFoundations("2H", 6, foundation);
 		table.addToFoundations("3D", 4, foundation);
 		table.addToFoundations("3C", 6, foundation);
@@ -195,13 +191,13 @@ public class Main {
 		table.addToFoundations("4S", 4, foundation);
 		table.addToFoundations("5D", 4, foundation);
 		table.addToFoundations("6D", 3, foundation);
-//		table.movePileCards("6H", 7, 3); // doesnot crash, good
+		// table.movePileCards("6H", 7, 3); // doesnot crash, good
 		table.movePileCards("6H", 6, 3);
 		table.movePileCards("5H", 6, 4);
 		stock.cycleCards();
 		stock.cycleCards();
 		stock.addToTableau(2, table);
-		foundation.FoundationMove(3, 3, table);
+		foundation.addToTableau(3, 3, table);
 		table.movePileCards("4H", 6, 3);
 		table.addToFoundations("3H", 6, foundation);
 		table.addToFoundations("4H", 3, foundation);
@@ -245,9 +241,8 @@ public class Main {
 		table.addToFoundations("12H", 3, foundation);
 		table.addToFoundations("11S", 5, foundation);
 		table.addToFoundations("12S", 2, foundation);
-		
-		
-		table.movePileCards("13S", 5, 4);	
+
+		table.movePileCards("13S", 5, 4);
 		table.movePileCards("12D", 5, 3);
 		table.addToFoundations("11D", 5, foundation);
 		table.addToFoundations("12D", 3, foundation);
@@ -255,27 +250,25 @@ public class Main {
 		table.addToFoundations("13H", 1, foundation);
 		table.addToFoundations("13D", 2, foundation);
 		table.addToFoundations("13C", 3, foundation);
-		
-		foundation.FoundationMove(2, 3, table);
-		foundation.FoundationMove(5, 8, table);
+
+		foundation.addToTableau(2, 3, table);
+		foundation.addToTableau(5, 8, table);
 		table.addToFoundations("13C", -1, foundation);
 		table.movePileCards("23D", 8, 9);
 		stock.addToFoundations(foundation);
 		stock.addToFoundations(foundation);
 		stock.addToTableau(1, table);
-		
+
 		foundation.printFoundations();
 		table.printTable();
-		
-		
+
 		stock.cycleCards();
 		stock.cycleCards();
-		
-		
-//		Solitaire board = new Solitaire(1);
-//		board.printBoard();
-//		System.out.println(board.getStock().toString());
-//		System.out.println(board.findSignificantMove());
+
+		// Solitaire board = new Solitaire(1);
+		// board.printBoard();
+		// System.out.println(board.getStock().toString());
+		// System.out.println(board.findSignificantMove());
 
 	}
 }

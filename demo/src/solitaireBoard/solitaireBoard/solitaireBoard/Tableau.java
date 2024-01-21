@@ -28,12 +28,12 @@ public class Tableau {
 	// I guess I make a class
 	// arrays are differently implemented from arraylist
 	// int[][] != Array<int>
-//	Card[] cardstack = new Card[7];
-// a good way to remove items from a datastructure that is resizeable?
-// how do i know if a card is revealed or not
-// maybe i can add it to my card class so that it is updated if revealed?
+	// Card[] cardstack = new Card[7];
+	// a good way to remove items from a datastructure that is resizeable?
+	// how do i know if a card is revealed or not
+	// maybe i can add it to my card class so that it is updated if revealed?
 
-//	public Deck cardDeck = new Deck();
+	// public Deck cardDeck = new Deck();
 
 	// plan: use deck as reference for which card to get
 	// store in arraylist numerical values to get card??
@@ -52,13 +52,13 @@ public class Tableau {
 	// then search card in cardpile
 	public void movePileCards(String cardName, int pileIndex, int newPileIndex) {
 		if (findTableMove(cardName, pileIndex, newPileIndex)) {
-			
+
 			int cardIndex = getCardIndexFromPile(cardName, pileIndex);
-			Card card = getPile(pileIndex-1).get(cardIndex);
-			if(card.revealed) {
+			Card card = getPile(pileIndex - 1).get(cardIndex);
+			if (card.getRevealed()) {
 				shiftCards(pileIndex, newPileIndex, cardIndex);
 			}
-			
+
 		}
 	}
 
@@ -111,7 +111,7 @@ public class Tableau {
 				for (int i = 0; i < 7; i++) {
 					Card card = getPile(j).get(k);
 					if (j != i && findTableMove(card.getCardName(), j + 1, i + 1)) {
-						if (k >= 1 && !getPile(j).get(k - 1).revealed) {
+						if (k >= 1 && !getPile(j).get(k - 1).getRevealed()) {
 							return true;
 						} else if (getPile(j).size() == 1) {
 							return true;
@@ -133,14 +133,12 @@ public class Tableau {
 			for (int i = 0; i < getPile(pileIndex - 1).size(); i++) {
 				if (getPile(pileIndex - 1).get(i).getCardName().equals(cardName)) {
 					foundCard = true;
-
 					cardIndex = i;
-//					System.out.println("AA");
 					break;
 				}
 			}
 
-			if (foundCard && getPile(pileIndex - 1).get(cardIndex).revealed) {
+			if (foundCard && getPile(pileIndex - 1).get(cardIndex).getRevealed()) {
 				// is the card that is being moved in the right pile?
 				// if so, copy the index of it
 				int cardValue = getPile(pileIndex - 1).get(cardIndex).getNumValue();
@@ -160,7 +158,7 @@ public class Tableau {
 					}
 				}
 
-//				printTable();
+				// printTable();
 
 			}
 		}
@@ -208,7 +206,7 @@ public class Tableau {
 		for (int i = 0; i < maxColumn; i++) {
 			for (int j = 0; j < 7; j++) {
 				if (i < getPile(j).size()) {
-					if (getPile(j).get(i).revealed) {
+					if (getPile(j).get(i).getRevealed()) {
 						printTable += String.format("%4s", getPile(j).get(i).getCardName());
 					} else {
 						printTable += String.format("%4s", "*");
@@ -232,13 +230,13 @@ public class Tableau {
 
 				getPile(pileIndex - 1).remove(copy);
 				foundations.getFoundation().get(foundationIndex).add(copy);
-				if(getPile(pileIndex - 1).size() > 0  && !getPile(pileIndex - 1).get(getPile(pileIndex - 1).size() - 1).revealed) {
+				if (getPile(pileIndex - 1).size() > 0
+						&& !getPile(pileIndex - 1).get(getPile(pileIndex - 1).size() - 1).getRevealed()) {
 					getPile(pileIndex - 1).get(getPile(pileIndex - 1).size() - 1).setCardRevealed(true);
 				}
-				
+
 			}
 		}
-
 
 		// repeating code, move to separate method?
 

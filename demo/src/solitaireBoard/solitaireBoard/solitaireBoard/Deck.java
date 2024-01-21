@@ -13,7 +13,6 @@ import solitaireBoard.EnumCards.*;
 
 public class Deck {
 	private ArrayList<Card> deckOfCards = new ArrayList<>();
-//	private HashMap<String, Card> everyCard = new HashMap<String, Card>();
 	private HashMap<String, Card> imageAndCard = new HashMap<String, Card>();
 
 	public Deck() {
@@ -39,7 +38,6 @@ public class Deck {
 				pngName = j + templateName + symbolFileString;
 				Card addedCard = new Card(j, symbolName, pngName);
 				deckOfCards.add(addedCard);
-//				everyCard.put(addedCard.storageValue, addedCard);
 				imageAndCard.put(pngName, addedCard);
 			}
 		}
@@ -66,8 +64,9 @@ public class Deck {
 		}
 	}
 
+	// hmm maybe i could combine both distributions?
 	public void distributeAdminDeck(Tableau tableau, Stock stock) {
-//		Collections.shuffle(deckOfCards);
+		// Collections.shuffle(deckOfCards);
 
 		int count = 0;
 		for (int i = 1; i < 8; i++) {
