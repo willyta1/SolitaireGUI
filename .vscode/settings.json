@@ -1,8 +1,0 @@
-{
-    "java.project.sourcePaths": [
-        "lib",
-        "demo/src/solitaireBoard/solitaireBoard",
-        "demo/src/GUI/GUI",
-        "demo/src/CardPNGs"
-    ]
-}

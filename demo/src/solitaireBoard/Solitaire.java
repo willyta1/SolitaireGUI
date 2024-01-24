@@ -124,4 +124,18 @@ public class Solitaire {
 	public Stock getStock() {
 		return stock;
 	}
+
+	public Tableau getTableau() {
+		return tableau;
+	}
+
+	public Foundations getFoundations() {
+		return foundation;
+		
+	}
+
+	private Deck getDeck() {
+		return deck;
+	}
+
 }

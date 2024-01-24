@@ -1,5 +1,14 @@
 package solitaireBoard;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.*;
+// import java.nio.file.Paths;
+
+import javax.imageio.ImageIO;
+
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import solitaireBoard.EnumCards.*;
 
@@ -25,7 +34,7 @@ public class Card {
 	color color;
 	private char rank;
 	private boolean revealed;
-	public Image cardImage;
+	private Image cardImage;
 
 	// what if i made symbol a number
 	// doing so allows me to more easily
@@ -45,7 +54,27 @@ public class Card {
 			color = color.black;
 		}
 		revealed = false;
-		cardImage = new Image("file://demo/src/CardPNGs/1_of_clubs.png"); // why cant i load this image
+
+        InputStream stream;
+		try {
+			String relativePath = "demo/src/CardPNGs/";
+			Path imagePath = Paths.get(relativePath +pngName + ".png");
+
+			System.out.println(Files.exists(Paths.get(relativePath +pngName + ".png")));
+			imagePath = Paths.get( relativePath +pngName + ".png");
+
+			stream = Files.newInputStream(Paths.get(relativePath + "/" + pngName + ".png"));
+			BufferedImage bufferedImage = ImageIO.read(stream);
+
+			
+			cardImage = SwingFXUtils.toFXImage(bufferedImage, null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+		
+		
 	}
 
 	public int getNumValue() {
