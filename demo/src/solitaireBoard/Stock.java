@@ -42,8 +42,7 @@ public class Stock {
 			counter++;
 			printCurrentCard();
 		}
-		// issues: stock should not show cards until the first call or when it goes past
-		// the last card in the stock
+
 	}
 
 	public void addToTableau(int newPileIndex, Tableau tableau) {
