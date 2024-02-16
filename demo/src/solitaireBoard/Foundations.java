@@ -29,6 +29,13 @@ public class Foundations {
 		System.out.println(foundationCards);
 	}
 
+	/*
+	 * Taking the topmost card from a foundation pile, method determines if it can place the card
+	 * in a pile in the tableau
+	 * @param foundationIndex A number from 1-4 choosing the foundation pile
+	 * @param pileIndex A number from 1-7 choosing a pile in the tableau
+	 * @param tableau The tableau the card would be added to for one of its pile
+	 */
 	public boolean findAddToTableau(int foundationIndex, int pileIndex, Tableau tableau) {
 		if (foundationIndex >= 1 && foundationIndex <= 4 && pileIndex >= 1 && pileIndex <= 7) {
 			Card foundationCard = piles.get(foundationIndex - 1).get(piles.get(foundationIndex - 1).size() - 1);
@@ -42,6 +49,13 @@ public class Foundations {
 
 	}
 
+	/*
+	 * Removes topmost card from the foundation and moves the card to the
+	 * tableau pile chosen, if possible
+	 * @param foundationIndex A number from 1-4 choosing the foundation pile
+	 * @param pileIndex A number from 1-7 choosing a pile in the tableau
+	 * @param tableau The tableau receiving the card for its pile
+	 */
 	public void addToTableau(int foundationIndex, int pileIndex, Tableau tableau) {
 		// remove topmost card from foundation, readd card to pile in tableau
 		if (foundationIndex >= 1 && foundationIndex <= 4 && piles.get(foundationIndex - 1).size() > 0) {
@@ -52,10 +66,7 @@ public class Foundations {
 			}
 		}
 
-		// get card string
-		// get tableau
-		// ensure valid adding to pile
-		//
+
 
 	}
 

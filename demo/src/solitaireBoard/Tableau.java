@@ -25,19 +25,11 @@ public class Tableau {
 	 * Store in a resizable data structure so we can call "pop" or something else
 	 * Thoughts on 1: How do we move a set of items and keep them in order?
 	 */
-	// I guess I make a class
-	// arrays are differently implemented from arraylist
-	// int[][] != Array<int>
-	// Card[] cardstack = new Card[7];
-	// a good way to remove items from a datastructure that is resizeable?
-	// how do i know if a card is revealed or not
-	// maybe i can add it to my card class so that it is updated if revealed?
+
 
 	// public Deck cardDeck = new Deck();
 
-	// plan: use deck as reference for which card to get
-	// store in arraylist numerical values to get card??
-	// how about a code
+
 	private ArrayList<ArrayList<Card>> cardPiles = new ArrayList<ArrayList<Card>>();
 
 	public Tableau() {
@@ -46,10 +38,7 @@ public class Tableau {
 		}
 	}
 
-	// go to pile
-	// search cardstoragevalue
-	// search value in hashmap
-	// then search card in cardpile
+
 	public void movePileCards(String cardName, int pileIndex, int newPileIndex) {
 		if (findTableMove(cardName, pileIndex, newPileIndex)) {
 
@@ -66,8 +55,7 @@ public class Tableau {
 		if (cardIndex != 0) {
 			getPile(pileIndex - 1).get(cardIndex - 1).setCardRevealed(true);
 		}
-		// "repeat removing and adding while num elementsi n arraylist is greater tha
-		// position
+
 		while (getPile(pileIndex - 1).size() > cardIndex) {
 
 			Card card = getPile(pileIndex - 1).get(cardIndex);
@@ -103,7 +91,7 @@ public class Tableau {
 
 	}
 
-	// has problem
+
 	public boolean findSignificantBoardMove() {
 
 		for (int j = 0; j < cardPiles.size(); j++) {
@@ -238,7 +226,7 @@ public class Tableau {
 			}
 		}
 
-		// repeating code, move to separate method?
+
 
 		/*
 		 * 1. Check the symbol via character in string (D, H, C, S) 2. Check the value

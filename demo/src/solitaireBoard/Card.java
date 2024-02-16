@@ -22,11 +22,7 @@ public class Card {
 	 * 
 	 */
 
-	/*
-	 * How do I make a card efficiently
-	 * 4 Loops?
-	 * 
-	 */
+
 	private int numValue;
 	private String pngName;
 	private String cardName;
@@ -35,12 +31,13 @@ public class Card {
 	private char rank;
 	private boolean revealed;
 	private Image cardImage;
+	public final String relativePath = "demo/src/CardPNGs/";
 
-	// what if i made symbol a number
-	// doing so allows me to more easily
-
-	// use enums for symbol and color
-
+	
+	/*
+	 * Creates Card object, assigns their data such as number value, symbol,
+	 * Additionally assigns a card image reflecting their card represented
+	 */
 	public Card(int numValue, symbol symbol, String pngName) {
 		this.numValue = numValue;
 		this.symbol = symbol;
@@ -54,27 +51,23 @@ public class Card {
 			color = color.black;
 		}
 		revealed = false;
-
-        InputStream stream;
-		try {
-			String relativePath = "demo/src/CardPNGs/";
-			Path imagePath = Paths.get(relativePath +pngName + ".png");
-
-			System.out.println(Files.exists(Paths.get(relativePath +pngName + ".png")));
-			imagePath = Paths.get( relativePath +pngName + ".png");
-
-			stream = Files.newInputStream(Paths.get(relativePath + "/" + pngName + ".png"));
-			BufferedImage bufferedImage = ImageIO.read(stream);
-
-			
-			cardImage = SwingFXUtils.toFXImage(bufferedImage, null);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		assignCardImage(relativePath, pngName);
         
 		
 		
+	}
+
+	/*
+	 * Helper function for constructor, used to assign image within CardPNGs to the 
+	 * Card object
+	 * @param relativePath The file path to the folder for the Card PNGs
+	 * @param pngName the name of the image stored in the card
+	 */
+	private void assignCardImage(String relativePath, String pngName) {
+        String cardPath = "file:demo/src/CardPNGs/";
+		cardPath = cardPath + pngName + ".png";
+		
+		cardImage = new Image(cardPath);
 	}
 
 	public int getNumValue() {

@@ -2,6 +2,9 @@ package solitaireBoard;
 
 public class Main {
 
+	/*
+	 * Mainly for testing class implementation of solitaire
+	 */
 	public static void main(String[] args) {
 		Deck cardDeck = new Deck();
 		Tableau table = new Tableau();
@@ -191,7 +194,7 @@ public class Main {
 		table.addToFoundations("4S", 4, foundation);
 		table.addToFoundations("5D", 4, foundation);
 		table.addToFoundations("6D", 3, foundation);
-		// table.movePileCards("6H", 7, 3); // doesnot crash, good
+		// table.movePileCards("6H", 7, 3); // does not crash, good
 		table.movePileCards("6H", 6, 3);
 		table.movePileCards("5H", 6, 4);
 		stock.cycleCards();

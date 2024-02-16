@@ -15,6 +15,11 @@ public class Solitaire {
 		foundation = new Foundations();
 	}
 
+	/*
+	 * Overloaded constructor that creates admin version that reveals
+	 * all cards for testing
+	 * @param i Entering any number will create a revealed version of Solitaire
+	 */
 	public Solitaire(int i) {
 		deck = new Deck();
 		tableau = new Tableau();
@@ -23,12 +28,19 @@ public class Solitaire {
 		foundation = new Foundations();
 	}
 
+	
 	public void printBoard() {
 		stock.printCurrentCard();
 		foundation.printFoundations();
 		tableau.printTable();
 	}
 
+	/*
+	 * Checks if adding a card to the foundation will result in
+	 * a productive move within the tableau, counting every possible
+	 * combination that a foundation move could give to advance the board state 
+	 * @return counter The total number of significant moves advancing board state
+	 */
 	public int findSignficantFoundationMove() {
 		Tableau copyTableau = new Tableau();
 		int counter = 0;
@@ -55,6 +67,14 @@ public class Solitaire {
 		return counter;
 	}
 
+
+	/*
+	 * Checks if adding any card from stock to foundation is possible,
+	 * which advances board state
+	 * Also checks if adding any card to the tableau will contribute to advancement
+	 * of board state such as revealing an unrevealed card
+	 * @return counter The total number of significant moves advancing board state
+	 */
 	public int findSignficantStockMove() {
 		Tableau copyTableau = tableau.copyTableau(deck);
 		int counter = 0;
@@ -73,6 +93,12 @@ public class Solitaire {
 		return counter;
 	}
 
+	/*
+	 * Checks all possible combinations of moving pile(s) of cards to see
+	 * if it reveals a card or adds a card to the foundation, and increments
+	 * a counter if it is determined to be a signifcant move
+	 * @return counter The total number of significant moves advancing board state
+	 */
 	public int findSignificantTableMove() {
 		int counter = 0;
 		Tableau copyTableau = new Tableau();
@@ -108,6 +134,12 @@ public class Solitaire {
 		return counter;
 	}
 
+	/*
+	 * Counts up the total number of significant moves from the 
+	 * three findSignificant moves methods
+	 * @return counter The total number of significant moves from stock,
+	 * tableau, and foundations
+	 */
 	public int findSignificantMove() {
 		int counter = 0;
 

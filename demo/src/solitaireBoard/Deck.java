@@ -15,6 +15,10 @@ public class Deck {
 	private ArrayList<Card> deckOfCards = new ArrayList<>();
 	private HashMap<String, Card> imageAndCard = new HashMap<String, Card>();
 
+	/*
+	 * Creates a deck of cards by first creating cards and adding them to
+	 * an ArrayList and HashMap
+	 */
 	public Deck() {
 		String templateName = "_of_";
 		String pngName = "";
@@ -43,6 +47,12 @@ public class Deck {
 		}
 	}
 
+	/*
+	 * Distributes the cards to tableau and stock, reveals the first
+	 * card of tableau and reveals all stock cards
+	 * @param tableau The tableau receiving the distributed cards
+	 * @param stock The stock receiving the distributed cards
+	 */
 	public void distributeDeck(Tableau tableau, Stock stock) {
 		Collections.shuffle(deckOfCards);
 
@@ -64,7 +74,11 @@ public class Deck {
 		}
 	}
 
-	// hmm maybe i could combine both distributions?
+	/*
+	 * For testing, reveals all cards in tableau and stock
+	 * @param tableau The tableau receiving the distributed revealed cards
+	 * @param stock The stock receiving the distributed revealed cards
+	 */
 	public void distributeAdminDeck(Tableau tableau, Stock stock) {
 		// Collections.shuffle(deckOfCards);
 
