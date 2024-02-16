@@ -38,6 +38,7 @@ public class TestGUI extends Application {
         imageView.setY(10);
         // imageView.setFitWidth(575);
         imageView.setPreserveRatio(true);
+        
         Group root = new Group(imageView);
         Scene scene = new Scene(root, 595, 370);
         scene.setFill(Color.GREEN);

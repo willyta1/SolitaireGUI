@@ -129,6 +129,11 @@ public class Card {
 		return pngName;
 	}
 
+	public Image getImage() {
+		return cardImage;
+		
+	}
+
 	@Override
 	public String toString() {
 		return symbol + ", " + rank + " (" + cardName + ")";

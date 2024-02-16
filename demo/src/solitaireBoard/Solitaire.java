@@ -115,7 +115,7 @@ public class Solitaire {
 		counter += findSignficantStockMove();
 		counter += findSignificantTableMove();
 
-		// one more loop for after making a valid move to table
+
 
 		return counter;
 
@@ -134,7 +134,7 @@ public class Solitaire {
 		
 	}
 
-	private Deck getDeck() {
+	public Deck getDeck() {
 		return deck;
 	}
 
