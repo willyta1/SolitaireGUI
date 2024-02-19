@@ -17,6 +17,9 @@ public class Stock {
 		counter = -1;
 	}
 
+	/*
+	 * prints the information of the current card that was drawn from the stock
+	 */
 	public void printCurrentCard() {
 		if (pileStock.size() > 0 && counter <= pileStock.size() - 1 && counter > -1) {
 			System.out.println(pileStock.get(counter));

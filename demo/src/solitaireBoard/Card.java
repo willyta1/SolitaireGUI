@@ -63,11 +63,34 @@ public class Card {
 	 * @param relativePath The file path to the folder for the Card PNGs
 	 * @param pngName the name of the image stored in the card
 	 */
+
 	private void assignCardImage(String relativePath, String pngName) {
-        String cardPath = "file:demo/src/CardPNGs/";
-		cardPath = cardPath + pngName + ".png";
+		// try {
+		// 	String cardPath = "file:demo/src/CardPNGs/";
+		// 	cardPath = cardPath + pngName + ".png";
+		// 	Image image = new Image(cardPath);
+		// 	cardImage = image;
+		// } catch (Exception e) {
+		// 	e.printStackTrace();
+		// }
+
+			// running above is simple and effective for assigning card image,
+			// Issue: causes an error for running without gui components in a
+			// non-gui environment
 		
-		cardImage = new Image(cardPath);
+		InputStream stream;
+		try {
+			// String copyRelativePath = "demo/src/CardPNGs/";
+			Path imagePath = Paths.get(relativePath +pngName + ".png");
+			System.out.println(Files.exists(Paths.get(relativePath +pngName + ".png")));
+			imagePath = Paths.get( relativePath +pngName + ".png");
+			stream = Files.newInputStream(Paths.get(relativePath + "/" + pngName + ".png"));
+			BufferedImage bufferedImage = ImageIO.read(stream);
+			cardImage = SwingFXUtils.toFXImage(bufferedImage, null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public int getNumValue() {

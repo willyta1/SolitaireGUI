@@ -55,20 +55,15 @@ public class SolitaireGUI extends Application {
         BorderPane mainPane = new BorderPane();
         mainPane.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
         
-        
         HBox HBox = new HBox();
         HBox.setAlignment(Pos.TOP_CENTER);
         HBox.setPrefSize(650, 240);
         
         VBox VBox = new VBox();
         StackPane stockPane = new StackPane();
-        
         ImageView stockPile = new ImageView();
-        
         Image stockPileImage = new Image("file:demo/src/CardPNGs/cardBack.png");
         
-        // imageView.maxHeight(100);
-        // stockPile.
         stockPile.setImage(stockPileImage);
         stockPile.setFitWidth(stockPileImage.getWidth() * 0.154);
         stockPile.setFitHeight(stockPileImage.getHeight() * 0.154);
@@ -88,7 +83,6 @@ public class SolitaireGUI extends Application {
         HBox.getChildren().add(stockFoundationSpace);
 
         Scene scene = new Scene(mainPane, 1440, 768);
-        
         scene.setFill(Color.GREEN);
         
         ArrayList<ArrayList<Card>> piles = solitaire.getTableau().getCardPiles();
@@ -108,7 +102,6 @@ public class SolitaireGUI extends Application {
             internalHBox.setPrefSize(30,240);
             HBox.getChildren().add(internalHBox);
         }
-
 
         for (ArrayList<Card> pile: piles) {
             length = 0;
