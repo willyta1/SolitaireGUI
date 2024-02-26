@@ -68,7 +68,7 @@ public class Deck {
 
 		}
 		for (int i = count; i < 52; i++) {
-			stock.getStock().add(deckOfCards.get(count));
+			stock.getPileStock().add(deckOfCards.get(count));
 			deckOfCards.get(count).setCardRevealed(true);
 			count++;
 		}
@@ -94,7 +94,7 @@ public class Deck {
 
 		}
 		for (int i = count; i < 52; i++) {
-			stock.getStock().add(deckOfCards.get(count));
+			stock.getPileStock().add(deckOfCards.get(count));
 			deckOfCards.get(count).setCardRevealed(true);
 			count++;
 		}

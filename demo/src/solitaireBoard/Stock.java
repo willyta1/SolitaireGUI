@@ -149,7 +149,11 @@ public class Stock {
 		return cardNames;
 	}
 
-	public ArrayList<Card> getStock() {
+	public ArrayList<Card> getPileStock() {
 		return pileStock;
+	}
+
+	public int getCounter() {
+		return counter;
 	}
 }

@@ -79,7 +79,7 @@ public class Solitaire {
 		Tableau copyTableau = tableau.copyTableau(deck);
 		int counter = 0;
 
-		for (Card card : stock.getStock()) {
+		for (Card card : stock.getPileStock()) {
 			if (stock.findAddToFoundation(card, foundation)) {
 				counter++;
 			} else if (stock.findAddToTableau(card, copyTableau) >= 0) {
