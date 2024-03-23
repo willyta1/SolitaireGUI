@@ -2,11 +2,11 @@ package solitaireBoard;
 
 public class EnumCards {
 	enum color {
-		red, black
+		RED, BLACK
 	}
 
 	public enum symbol {
-		Diamond, Heart, Club, Spade
+		DIAMOND, HEART, CLUB, SPADE
 	}
 
 }

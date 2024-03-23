@@ -1,100 +1,332 @@
 package GUI;
 
-
 import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.Map;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import solitaireBoard.*;
+import solitaireBoard.EnumBoardPosition.BoardPosition;
 
 public class SolitaireGUI extends Application {
     private Solitaire solitaire = new Solitaire();
-    
+    private Map<String, BoardPosition> cardAndBoardPositionMap = new HashMap<>();
+    private Map<String, Integer> boardAndBoardPositionMap = new HashMap<>();
+    private ArrayList<String> twoClicksArray = new ArrayList<>();
+
+    private ArrayList<StackPane> foundationGUIPiles = new ArrayList<>();
+    private ArrayList<StackPane> tableauGUIPiles = new ArrayList<>();
+
+    private Stage stage;
+    private HBox HBox;
+    private FlowPane flowPane;
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    // 3/22 stock bug when playing cards?
     @Override
     public void start(Stage stage) throws Exception {
-
-
-        stage.setMinHeight(650);
+        stage.setMinHeight(750);
         stage.setMinWidth(950);
-
-        Scene scene = createSolitaireBoard();
+        this.stage = stage;
+        Scene scene = createSolitaireBoard(stage);
         stage.setScene(scene);
         stage.show();
-        
     }
 
-    public Scene createSolitaireBoard() {
-        GridPane pane = new GridPane();
-        pane.setAlignment(Pos.CENTER);
+    public Scene createSolitaireBoard(Stage stage) {
+        Scene scene = refresh(stage);
+        return scene;
+    }
 
+    public ImageView buildTableauGUICard(Card card, int len) {
+        Image image = card.getImage();
+        ImageView imageView = new ImageView(card.getImage());
+        if (card.getRevealed()) {
+            imageView.setFitWidth(image.getWidth() * 0.2);
+            imageView.setFitHeight(image.getHeight() * 0.2);
+            imageView.setPreserveRatio(true);
+            cardAndBoardPositionMap.put(card.getCardName(), BoardPosition.TABLEAU);
+            imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent arg0) {
+                            // plan: use image to compare cards and strings
+                            
+                    if (twoClicksArray.size() <= 1) {
+                        twoClicksArray.add(card.getCardName());
+                    }
+                    if (twoClicksArray.size() == 2) {
+                        handleTwoClicks(stage);
+                    }
+                    System.out.println("B");
+                }
+            });
+        } else {
+            image = new Image("file:demo/src/CardPNGs/cardBack.png");
+            imageView = new ImageView(image);
+            imageView.setFitWidth(image.getWidth() * 0.152);
+            imageView.setFitHeight(image.getHeight() * 0.152);
+        }
+
+        imageView.setPreserveRatio(true);
+        return imageView;
+    }
+
+    public void addTableauMouseClickEvent(int num) {
+        if (tableauGUIPiles.get(num).getChildren().size() == 0) {
+            EventHandler event = new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent arg0) {
+                    if (twoClicksArray.size() == 1) {
+                        twoClicksArray.add("tableaupile" + (num+1));
+                    }
+                    if (twoClicksArray.size() == 2) {
+                        handleTwoClicks(stage);
+                    }
+                    System.out.println("A");
+                }
+
+            };
+            tableauGUIPiles.get(num).setBackground(new Background(new BackgroundFill(Color.RED, null, null)));
+            
+            tableauGUIPiles.get(num).setOnMouseClicked(event);
+        } else {
+            tableauGUIPiles.get(num).setOnMouseClicked(null);
+            tableauGUIPiles.get(num).setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
+        }
+    }
+
+    public void updateTableau() {
+        for (int i = 0; i < solitaire.getTableau().getCardPiles().size(); i++) {
+            ArrayList<Card> pile = solitaire.getTableau().getCardPiles().get(i);
+            int len = 10;
+            int numPile = i + 1;
+
+            if(tableauGUIPiles.size() < 7) {
+                boardAndBoardPositionMap.put("tableaupile" + (numPile), i + 8);
+                StackPane tableauPile = new StackPane();
+                tableauGUIPiles.add(tableauPile);
+                tableauPile.setMinWidth(solitaire.getDeck().getCardNameAndCard().get("1D").getImage().getWidth() * 0.2);
+            }
+
+            tableauGUIPiles.get(i).getChildren().clear();
+            for (Card card : pile) {
+                
+                ImageView imageView = buildTableauGUICard(card, len);
+                if (card.getRevealed()) {
+                    StackPane.setMargin(imageView, new Insets(len, 0, 0, 0));
+                    len += 25;
+                } else {
+                    StackPane.setMargin(imageView, new Insets(len, 0, 0, 0));
+                    len += 15;
+                }
+                tableauGUIPiles.get(i).getChildren().addAll(imageView);
+            }
+            addTableauMouseClickEvent(i);
+            
+            tableauGUIPiles.get(i).setAlignment(Pos.TOP_CENTER);
+            if(flowPane.getChildren().size() < 7) {
+                flowPane.getChildren().add(tableauGUIPiles.get(i));
+            }
+        }
+    }
+
+    public void updateFoundations() {
+        for (int i = 0; i < 4; i++) {
+            
+            StackPane foundationPile = new StackPane();
+            foundationPile.setAlignment(Pos.TOP_CENTER);
+            foundationPile.setPadding(new Insets(5, 0, 0, 0));
+            foundationGUIPiles.add(foundationPile);
+            ImageView foundationImage = new ImageView();
+            Image image = new Image("file:demo/src/CardPNGs/foundationspace.png");
+
+            foundationImage.setImage(image);
+
+
+            String foundationPileString = "foundationpile" + (i + 1);
+            boardAndBoardPositionMap.put(foundationPileString, i);
+
+            foundationPile.getChildren().add(foundationImage);
+
+            HBox.getChildren().add(foundationPile);
+
+            HBox internalHBox = new HBox();
+            internalHBox.setPrefSize(30, 240);
+            HBox.getChildren().add(internalHBox);
+
+            for (Card card : solitaire.getFoundations().getFoundationPile(i)) {
+                Image cardImage = card.getImage();
+                ImageView imageView = new ImageView();
+                imageView.setImage(cardImage);
+                imageView.setFitHeight(cardImage.getHeight() * 0.2);
+                imageView.setFitWidth(cardImage.getWidth() * 0.2);
+
+                cardAndBoardPositionMap.put(card.getCardName(), BoardPosition.FOUNDATIONS);
+                imageView.setPreserveRatio(true);
+                imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+                    @Override
+                    public void handle(MouseEvent arg0) {
+                        // TODO Auto-generated method stub
+                        System.out.println("AAAAAA");
+                        Card cardCopy = card;
+
+                        if (twoClicksArray.size() <= 1) {
+                            twoClicksArray.add(cardCopy.getCardName());
+                        }
+                        if (twoClicksArray.size() == 2) {
+                            handleTwoClicks(stage);
+                        }
+                    }
+
+                });
+                StackPane.setMargin(imageView, new Insets(8, 0, 0, 0));
+                foundationPile.getChildren().add(imageView);
+            }
+
+            foundationPile.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+                @Override
+                public void handle(MouseEvent arg0) {
+                    if (foundationPile.getChildren().size() == 1) {
+                        String foundationPileName = foundationPileString;
+
+                        if (twoClicksArray.size() == 1) {
+                            twoClicksArray.add(foundationPileName);
+                        }
+                        if (twoClicksArray.size() >= 2) {
+                            handleTwoClicks(stage);
+                        }
+
+                        System.out.println(foundationPileName);
+                    }
+
+                }
+
+            });
+            if (foundationPile.getChildren().size() == 0) {
+                foundationPile.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+                    @Override
+                    public void handle(MouseEvent arg0) {
+                        if (foundationPile.getChildren().size() == 1) {
+                            String foundationPileName = foundationPileString;
+
+                            if (twoClicksArray.size() == 1) {
+                                twoClicksArray.add(foundationPileName);
+                            }
+                            if (twoClicksArray.size() >= 2) {
+                                handleTwoClicks(stage);
+                            }
+
+                            System.out.println(foundationPileName);
+                        }
+
+                    }
+
+                });
+            }
+        }
+    }
+
+    public Scene refresh(Stage stage) {
+        // flowPane holds the Tableau
+        FlowPane flowPane = new FlowPane();
+        this.flowPane = flowPane;
+        flowPane.setHgap(30);
+        flowPane.setAlignment(Pos.TOP_CENTER);
         BorderPane mainPane = new BorderPane();
         mainPane.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
-        
+
         HBox HBox = new HBox();
         HBox.setAlignment(Pos.TOP_CENTER);
-        HBox.setPrefSize(650, 240);
-        
-        VBox VBox = new VBox();
+        HBox.setPrefSize(650, 160);
+        this.HBox = HBox;
         StackPane stockPane = new StackPane();
 
         ImageView stockPileEmpty = new ImageView();
         Image stockPileEmptyImage = new Image("file:demo/src/CardPNGs/stockspaceempty.png");
-        stockPileEmpty.setFitHeight(stockPileEmptyImage.getHeight() *0.9);
-        stockPileEmpty.setFitWidth(stockPileEmptyImage.getWidth() *0.87);
-
-
+        stockPileEmpty.setFitHeight(stockPileEmptyImage.getHeight() * 0.9);
+        stockPileEmpty.setFitWidth(stockPileEmptyImage.getWidth() * 0.87);
         stockPileEmpty.setImage(stockPileEmptyImage);
 
         ImageView stockPile = new ImageView();
         Image stockPileImage = new Image("file:demo/src/CardPNGs/cardBack.png");
-        
+
         StackPane stockFoundationSpace = new StackPane();
         stockFoundationSpace.setAlignment(Pos.TOP_LEFT);
         stockFoundationSpace.setPadding(new Insets(10, 0, 0, 10));
+        if (solitaire.getStock().getDrawnPileStock() != null) {
+
+            for (Card card : solitaire.getStock().getDrawnPileStock()) {
+                Image cardImage = card.getImage();
+                System.out.println(solitaire.getStock().getCounter());
+                if (solitaire.getStock().getCurrentCard() != null) {
+                    cardAndBoardPositionMap.put(solitaire.getStock().getCurrentCard().getCardName(),
+                            BoardPosition.STOCK);
+                    ImageView cardImageView = new ImageView();
+                    cardImageView.setImage(cardImage);
+                    cardImageView.setFitHeight(cardImage.getHeight() * 0.2);
+                    cardImageView.setFitWidth(cardImage.getWidth() * 0.2);
+
+                    cardImageView.setPreserveRatio(true);
+                    cardImageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+                        @Override
+                        public void handle(MouseEvent arg0) {
+                            // TODO Auto-generated method stub
+                            System.out.println("AAAAAA");
+                            if (solitaire.getStock().getCurrentCard() != null) {
+                                String cardName = solitaire.getStock().getCurrentCard().getCardName();
+                                twoClicksArray.clear();
+                                if (twoClicksArray.size() == 0) {
+                                    twoClicksArray.add(cardName);
+                                }
+                            }
+
+                        }
+
+                    });
+                    stockFoundationSpace.getChildren().add(cardImageView);
+                }
+            }
+        }
 
         stockPile.setImage(stockPileImage);
         stockPile.setFitWidth(stockPileImage.getWidth() * 0.152);
         stockPile.setFitHeight(stockPileImage.getHeight() * 0.152);
-        stockPile.setUserData("stock");
         stockPile.setPreserveRatio(true);
 
         stockPane.getChildren().add(stockPileEmpty);
         stockPane.getChildren().add(stockPile);
         stockPane.setAlignment(Pos.TOP_CENTER);
-        stockPane.setPadding(new Insets(10,0,0,0));
-        
+        stockPane.setPadding(new Insets(10, 0, 0, 15));
         stockPileEmpty.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
             @Override
             public void handle(MouseEvent arg0) {
                 // TODO Auto-generated method stub
-                if(!stockPile.isVisible()) {
+                if (!stockPile.isVisible()) {
                     solitaire.getStock().cycleCards();
                     stockPile.setVisible(true);
                     stockFoundationSpace.getChildren().clear();
@@ -102,119 +334,168 @@ public class SolitaireGUI extends Application {
             }
 
         });
+        if (solitaire.getStock().getCounter() == solitaire.getStock().getPileStock().size() - 1) {
+            stockPile.setVisible(false);
+        }
+        if (solitaire.getStock().getPileStock().size() != 0) {
+            stockPile.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
-        stockPile.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                @Override
+                public void handle(MouseEvent arg0) {
+                    // TODO Auto-generated method stub
+                    solitaire.getStock().cycleCards();
+                    System.out.println("Current card: " + solitaire.getStock().getCurrentCard());
+                    System.out.println("Current counter: " + solitaire.getStock().getCounter());
+                    if (solitaire.getStock().getCounter() == solitaire.getStock().getPileStock().size() - 1) {
+                        stockPile.setVisible(false);
+                    }
 
-            @Override
-            public void handle(MouseEvent arg0) {
-                // TODO Auto-generated method stub
-                solitaire.getStock().cycleCards();
-                if(solitaire.getStock().getCounter() == solitaire.getStock().getPileStock().size()-1) {
-                    stockPile.setVisible(false);
+                    if (solitaire.getStock().getCurrentCard() != null) {
+                        Image cardImage = solitaire.getStock().getCurrentCard().getImage();
+                        cardAndBoardPositionMap.put(solitaire.getStock().getCurrentCard().getCardName(),
+                                BoardPosition.STOCK);
+                        ImageView cardImageView = new ImageView();
+                        cardImageView.setImage(cardImage);
+                        cardImageView.setFitHeight(cardImage.getHeight() * 0.2);
+                        cardImageView.setFitWidth(cardImage.getWidth() * 0.2);
+                        cardImageView.setPreserveRatio(true);
+                        cardImageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+                            @Override
+                            public void handle(MouseEvent arg0) {
+                                // TODO Auto-generated method stub
+                                System.out.println("AAAAAA");
+                                System.out.println(solitaire.getStock().getCurrentCard().getCardName());
+                                String cardName = solitaire.getStock().getCurrentCard().getCardName();
+                                twoClicksArray.clear();
+                                if (twoClicksArray.size() == 0) {
+                                    twoClicksArray.add(cardName);
+                                }
+                            }
+                        });
+                        stockFoundationSpace.getChildren().add(cardImageView);
+
+                    }
                 }
-                
-                if(solitaire.getStock().getCurrentCard() != null) {
-                    Image cardImage = solitaire.getStock().getCurrentCard().getImage();
-                    ImageView cardImageView = new ImageView();
-                    cardImageView.setImage(cardImage);
-                    cardImageView.setFitHeight(cardImage.getHeight()*0.2);
-                    cardImageView.setFitWidth(cardImage.getWidth()*0.2);
-                    
-                    cardImageView.setPreserveRatio(true);
-                    stockFoundationSpace.getChildren().add(cardImageView);
-                    
-
-                } else {
-                    // issue: we need to add an icon under the stock pile ot indicate that it is the last card
-                    // stockFoundationSpace.getChildren().clear();
-                }
-            } 
-
-        });
+            });
+        } else {
+            stockPile.setVisible(false);
+        }
 
         HBox.getChildren().add(stockPane);
-        
-        stockFoundationSpace.setPrefSize(240, 240);
+        stockFoundationSpace.setPrefSize(240, 160);
         HBox.getChildren().add(stockFoundationSpace);
-
         HBox.setBackground(new Background(new BackgroundFill(Color.BEIGE, null, null)));
         mainPane.setTop(HBox);
-        mainPane.setCenter(pane);
-        
-
+        mainPane.setCenter(flowPane);
 
         Scene scene = new Scene(mainPane, 1440, 768);
         scene.setFill(Color.GREEN);
+
+        updateFoundations();
+        updateTableau();
         
-        ArrayList<ArrayList<Card>> piles = solitaire.getTableau().getCardPiles();
-        int width = 0;
-        int length = 0;
-        
-        // ImageView foundationPile = new ImageView();
-        for (int i = 0; i < 4; i++) {
-            StackPane foundationPile = new StackPane();
-            foundationPile.setAlignment(Pos.TOP_CENTER);
-            foundationPile.setPadding(new Insets(5,0,0,0));
-           
-            ImageView foundationImage = new ImageView();
-            Image image = new Image("file:demo/src/CardPNGs/foundationspace.png");
-            
-            foundationImage.setImage(image);
-            foundationImage.setUserData("foundationpile" + (i+1));
-            foundationPile.getChildren().add(foundationImage);
-            HBox.getChildren().add(foundationPile);
+        stage.setScene(scene);
+        return scene;
 
-            HBox internalHBox = new HBox();
-            internalHBox.setPrefSize(30,240);
-            HBox.getChildren().add(internalHBox);
-        }
+    }
 
-        for (ArrayList<Card> pile: piles) {
-            length = 0;
-            ColumnConstraints column1 = new ColumnConstraints(130);
-            pane.getColumnConstraints().addAll(column1); 
-            for (Card card: pile) {
-
-                Image image = card.getImage();
-                
-                ImageView imageView = new ImageView(card.getImage());
-                imageView.setUserData(card.getCardName());
-                imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-                    @Override
-                    public void handle(MouseEvent arg0) {
-                        // TODO Auto-generated method stub
-                        throw new UnsupportedOperationException("Unimplemented method 'handle'");
+    public void handleTwoClicks(Stage stage) {
+        double initTime = System.nanoTime();
+        if (twoClicksArray.size() == 2) {
+            if (cardAndBoardPositionMap.get(twoClicksArray.get(0)).equals(BoardPosition.STOCK)) {
+                System.out.println(twoClicksArray.get(1));
+                if (boardAndBoardPositionMap.get(twoClicksArray.get(1)) != null &&
+                        boardAndBoardPositionMap.get(twoClicksArray.get(1)) <= 4) {
+                    int foundationIndex = boardAndBoardPositionMap.get(twoClicksArray.get(1));
+                    Card copyMovedCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
+                    if (solitaire.getStock().findAddToFoundation(copyMovedCard, foundationIndex,
+                            solitaire.getFoundations())) {
+                        solitaire.getStock().addToFoundations(solitaire.getFoundations(), foundationIndex);
+                        refresh(stage);
                     }
 
+                } else if (cardAndBoardPositionMap.get(twoClicksArray.get(1)) != null &&
+                        cardAndBoardPositionMap.get(twoClicksArray.get(1)).equals(BoardPosition.TABLEAU)) {
+                    System.out.println("adgh");
+                    int pileNum = solitaire.getTableau().findPileWithCard(twoClicksArray.get(1));
+                    Card copyMovedCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
 
-                    
-                });
-                imageView.setScaleX(0.2);
-                imageView.setScaleY(0.2);
+                    if (solitaire.getStock().findIndexAddToTableau(copyMovedCard, pileNum, solitaire.getTableau())) {
+                        solitaire.getStock().addToTableau(pileNum, solitaire.getTableau());
+                        refresh(stage);
+                    }
 
-                // imageView.maxHeight(100);
-                // imageView.maxWidth(70);
-                imageView.setPreserveRatio(true);
+                } else if (cardAndBoardPositionMap.get(twoClicksArray.get(1)) != null &&
+                        cardAndBoardPositionMap.get(twoClicksArray.get(1)).equals(BoardPosition.FOUNDATIONS)) {
+                    // int foundationIndex = boardAndBoardPositionMap.get(twoClicksArray.get(1));
+                    Card copyMovedCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
+                    if (solitaire.getStock().findAddToFoundation(copyMovedCard, solitaire.getFoundations())) {
+                        Card destinationCard = (Card) solitaire.getDeck().getCardNameAndCard()
+                                .get(twoClicksArray.get(1));
+                        int foundationIndex = destinationCard.findFoundationIndex();
+                        solitaire.getStock().addToFoundations(solitaire.getFoundations(), foundationIndex);
+                        refresh(stage);
+                    }
+                } else if (boardAndBoardPositionMap.get(twoClicksArray.get(1)) != null
+                        && boardAndBoardPositionMap.get(twoClicksArray.get(1)) >= 8) {
+                    int tableauPile = boardAndBoardPositionMap.get(twoClicksArray.get(1));
+                    solitaire.getStock().addToTableau(tableauPile - 7, solitaire.getTableau());
+                    refresh(stage);
+                }
+            } else if (cardAndBoardPositionMap.get(twoClicksArray.get(0)).equals(BoardPosition.TABLEAU)) {
+                if (boardAndBoardPositionMap.get(twoClicksArray.get(1)) != null &&
+                        boardAndBoardPositionMap.get(twoClicksArray.get(1)) <= 4) {
+                    // adding to foundation
+                    int foundationIndex = boardAndBoardPositionMap.get(twoClicksArray.get(1));
 
-                RowConstraints row2 = new RowConstraints();
+                    Card copyMovedCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
+                    int tableauPile = solitaire.getTableau().findPileWithCard(copyMovedCard.getCardName());
+                    if (solitaire.getTableau().findAddToFoundation(copyMovedCard.getCardName(), tableauPile,
+                            foundationIndex, solitaire.getFoundations())) {
 
-                row2.setMinHeight(25);
-                row2.setMaxHeight(50);
-                pane.getRowConstraints().addAll(row2);
+                        solitaire.getTableau().addToFoundations(copyMovedCard.getCardName(), tableauPile,
+                                foundationIndex, solitaire.getFoundations());
+                                refresh(stage);
+                    }
+                } else if (cardAndBoardPositionMap.get(twoClicksArray.get(1)) != null
+                        && cardAndBoardPositionMap.get(twoClicksArray.get(1)).equals(BoardPosition.FOUNDATIONS)) {
+                    Card copyMovedCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
+                    Card copyDestinationCard = (Card) solitaire.getDeck().getCardNameAndCard()
+                            .get(twoClicksArray.get(1));
 
-                pane.setHalignment(imageView, HPos.CENTER); 
-                pane.setValignment(imageView, VPos.CENTER); 
-                pane.setConstraints(imageView, width, length);
+                    int tableauPileIndex = solitaire.getTableau().findPileWithCard(copyMovedCard.getCardName());
+                    int foundationIndex = copyDestinationCard.findFoundationIndex();
+                    solitaire.getTableau().addToFoundations(copyMovedCard.getCardName(), tableauPileIndex,
+                            foundationIndex, solitaire.getFoundations());
+                    refresh(stage);
 
+                } else if (cardAndBoardPositionMap.get(twoClicksArray.get(1)) != null
+                        && cardAndBoardPositionMap.get(twoClicksArray.get(1)).equals(BoardPosition.TABLEAU)) {
+                    Card copyMovedCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
+                    Card copyDestinationCard = (Card) solitaire.getDeck().getCardNameAndCard()
+                            .get(twoClicksArray.get(1));
+                    int destPileIndex = solitaire.getTableau().findPileWithCard(copyDestinationCard.getCardName());
+                    int movePileIndex = solitaire.getTableau().findPileWithCard(copyMovedCard.getCardName());
 
-                pane.getChildren().add(imageView);
-
-                length += 1;
+                    if (solitaire.getTableau().findTableMove(copyMovedCard.getCardName(), movePileIndex,
+                            destPileIndex)) {
+                        solitaire.getTableau().movePileCards(copyMovedCard.getCardName(), movePileIndex, destPileIndex);
+                        updateTableau();
+                    }
+                } else if (boardAndBoardPositionMap.get(twoClicksArray.get(1)) != null &&
+                        boardAndBoardPositionMap.get(twoClicksArray.get(1)) >= 8) {
+                    int tableauPile = boardAndBoardPositionMap.get(twoClicksArray.get(1));
+                    Card copyMovedCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
+                    int movePileIndex = solitaire.getTableau().findPileWithCard(copyMovedCard.getCardName());
+                    solitaire.getTableau().movePileCards(copyMovedCard.getCardName(), movePileIndex, tableauPile - 7);
+                    updateTableau();
+                }
             }
-            width += 1;
         }
+        twoClicksArray.clear();
+        double endTime = System.nanoTime();
+        System.out.println((endTime - initTime) / 1000000000);
 
-        return scene;
     }
 }

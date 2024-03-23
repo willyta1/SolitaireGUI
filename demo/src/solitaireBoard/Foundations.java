@@ -2,6 +2,8 @@ package solitaireBoard;
 
 import java.util.ArrayList;
 
+import solitaireBoard.EnumBoardPosition.BoardPosition;
+
 public class Foundations {
 	/*
 	 * 4 piles: Hearts, Diamonds, Clubs, Spades Each pile can only hold their color
@@ -61,6 +63,7 @@ public class Foundations {
 		if (foundationIndex >= 1 && foundationIndex <= 4 && piles.get(foundationIndex - 1).size() > 0) {
 			if (pileIndex >= 1 && pileIndex <= 7 && findAddToTableau(foundationIndex, pileIndex, tableau)) {
 				Card foundationCard = piles.get(foundationIndex - 1).get(piles.get(foundationIndex - 1).size() - 1);
+				
 				tableau.addCardInOrder(pileIndex, foundationCard);
 				piles.get(foundationIndex - 1).remove(foundationCard);
 			}

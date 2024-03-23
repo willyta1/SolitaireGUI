@@ -2,6 +2,7 @@ package solitaireBoard;
 
 import java.util.*;
 
+import solitaireBoard.EnumBoardPosition.BoardPosition;
 import solitaireBoard.EnumCards.*;
 
 public class Tableau {
@@ -218,6 +219,7 @@ public class Tableau {
 
 				getPile(pileIndex - 1).remove(copy);
 				foundations.getFoundation().get(foundationIndex).add(copy);
+				
 				if (getPile(pileIndex - 1).size() > 0
 						&& !getPile(pileIndex - 1).get(getPile(pileIndex - 1).size() - 1).getRevealed()) {
 					getPile(pileIndex - 1).get(getPile(pileIndex - 1).size() - 1).setCardRevealed(true);
@@ -225,9 +227,25 @@ public class Tableau {
 
 			}
 		}
+	}
 
-
-
+		public void addToFoundations(String cardName, int tableauPileIndex, int foundationIndex, Foundations foundations) {
+			
+			if (tableauPileIndex >= 1 && tableauPileIndex <= 7 && getPile(tableauPileIndex - 1).size() > 0) {
+				Card copy = getPile(tableauPileIndex - 1).get(getPile(tableauPileIndex - 1).size() - 1);
+				if (findAddToFoundation(cardName, tableauPileIndex, foundationIndex, foundations)) {
+	
+					getPile(tableauPileIndex - 1).remove(copy);
+					foundations.getFoundation().get(foundationIndex).add(copy);
+					
+					if (getPile(tableauPileIndex - 1).size() > 0
+							&& !getPile(tableauPileIndex - 1).get(getPile(tableauPileIndex - 1).size() - 1).getRevealed()) {
+						getPile(tableauPileIndex - 1).get(getPile(tableauPileIndex - 1).size() - 1).setCardRevealed(true);
+					}
+	
+				}
+			}
+		
 		/*
 		 * 1. Check the symbol via character in string (D, H, C, S) 2. Check the value
 		 * of the string 3. Check if the card can be added 4. If the card can be added
@@ -252,6 +270,28 @@ public class Tableau {
 		}
 		return false;
 	}
+
+	public boolean findAddToFoundation(String cardName, int tableauPileIndex, int foundationIndex, Foundations foundations) {
+
+		
+		if (getPile(tableauPileIndex - 1).get(getPile(tableauPileIndex - 1).size() - 1).getCardName().equals(cardName)) {
+			if(foundationIndex == findFoundationIndex(cardName)) {
+				if (foundations.getFoundation().get(foundationIndex).isEmpty()
+					&& getPile(tableauPileIndex - 1).get(getPile(tableauPileIndex - 1).size() - 1).getNumValue() == 1) {
+					return true;
+				} else if (foundations.getFoundation().get(foundationIndex).size() > 0 && foundations.getFoundation()
+					.get(foundationIndex).get(foundations.getFoundation().get(foundationIndex).size() - 1)
+					.getNumValue() == getPile(tableauPileIndex - 1).get(getPile(tableauPileIndex - 1).size() - 1).getNumValue() - 1) {
+					return true;
+
+				}
+			}
+
+		}
+		return false;
+	}
+
+
 
 	public int findFoundationIndex(String cardName) {
 		char symbol = cardName.charAt(cardName.length() - 1);
@@ -293,4 +333,18 @@ public class Tableau {
 		return cardPiles.get(pileIndex);
 	}
 
+	public int findPileWithCard(String card) {
+		int pileNum = 0;
+		for (ArrayList<Card> pile: cardPiles) {
+			pileNum++;
+			for (Card searchedCard: pile) {
+				if(searchedCard.getCardName().equals(card)) {
+					return pileNum;
+				}
+			}
+			
+		}
+		return 0;
+
+	}
 }

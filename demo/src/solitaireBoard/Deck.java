@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import solitaireBoard.EnumBoardPosition.BoardPosition;
 import solitaireBoard.EnumCards.*;
 
 /* Used to build a deck of cards that will be distributed amongst table and stock
@@ -14,7 +15,7 @@ import solitaireBoard.EnumCards.*;
 public class Deck {
 	private ArrayList<Card> deckOfCards = new ArrayList<>();
 	private HashMap<String, Card> imageAndCard = new HashMap<String, Card>();
-
+	private HashMap<String, Card> cardNameAndCard = new HashMap<>();
 	/*
 	 * Creates a deck of cards by first creating cards and adding them to
 	 * an ArrayList and HashMap
@@ -25,16 +26,16 @@ public class Deck {
 		for (int i = 0; i < 4; i++) {
 			String symbolFileString = "";
 			symbol symbolName;
-			symbolName = symbol.Diamond;
+			symbolName = symbol.DIAMOND;
 			symbolFileString = "diamonds";
 			if (i == 1) {
-				symbolName = symbol.Heart;
+				symbolName = symbol.HEART;
 				symbolFileString = "hearts";
 			} else if (i == 2) {
-				symbolName = symbol.Club;
+				symbolName = symbol.CLUB;
 				symbolFileString = "clubs";
 			} else if (i == 3) {
-				symbolName = symbol.Spade;
+				symbolName = symbol.SPADE;
 				symbolFileString = "spades";
 			}
 
@@ -43,6 +44,7 @@ public class Deck {
 				Card addedCard = new Card(j, symbolName, pngName);
 				deckOfCards.add(addedCard);
 				imageAndCard.put(pngName, addedCard);
+				cardNameAndCard.put(addedCard.getCardName(), addedCard);
 			}
 		}
 	}
@@ -88,6 +90,7 @@ public class Deck {
 				tableau.getPile(i - 1).add(deckOfCards.get(count));
 				if (j == 1) {
 					deckOfCards.get(count).setCardRevealed(true);
+					
 				}
 				count++;
 			}
@@ -95,6 +98,7 @@ public class Deck {
 		}
 		for (int i = count; i < 52; i++) {
 			stock.getPileStock().add(deckOfCards.get(count));
+			
 			deckOfCards.get(count).setCardRevealed(true);
 			count++;
 		}
@@ -108,4 +112,7 @@ public class Deck {
 		return imageAndCard;
 	}
 
+	public HashMap<String,Card> getCardNameAndCard() {
+		return cardNameAndCard;
+	}
 }

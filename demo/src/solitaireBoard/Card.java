@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
+import solitaireBoard.EnumBoardPosition.BoardPosition;
 import solitaireBoard.EnumCards.*;
 
 public class Card {
@@ -32,7 +33,6 @@ public class Card {
 	private boolean revealed;
 	private Image cardImage;
 	public final String relativePath = "demo/src/CardPNGs/";
-
 	
 	/*
 	 * Creates Card object, assigns their data such as number value, symbol,
@@ -46,9 +46,9 @@ public class Card {
 
 		this.rank = symbol.toString().charAt(0);
 		if (rank == 'D' || rank == 'H') {
-			color = color.red;
+			color = color.RED;
 		} else {
-			color = color.black;
+			color = color.BLACK;
 		}
 		revealed = false;
 		assignCardImage(relativePath, pngName);
@@ -153,6 +153,24 @@ public class Card {
 	@Override
 	public String toString() {
 		return symbol + ", " + rank + " (" + cardName + ")";
+	}
+
+
+
+	public int findFoundationIndex() {
+		char symbol = cardName.charAt(cardName.length() - 1);
+		int pileIndex;
+
+		if (symbol == 'D') {
+			pileIndex = 0;
+		} else if (symbol == 'H') {
+			pileIndex = 1;
+		} else if (symbol == 'C') {
+			pileIndex = 2;
+		} else {
+			pileIndex = 3;
+		}
+		return pileIndex;
 	}
 
 }
