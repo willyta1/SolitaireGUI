@@ -60,7 +60,7 @@ public class Foundations {
 	 */
 	public void addToTableau(int foundationIndex, int pileIndex, Tableau tableau) {
 		// remove topmost card from foundation, readd card to pile in tableau
-		if (foundationIndex >= 1 && foundationIndex <= 4 && piles.get(foundationIndex).size() > 0) {
+		if (foundationIndex >= 0 && foundationIndex <= 3 && piles.get(foundationIndex).size() > 0) {
 			if (pileIndex >= 1 && pileIndex <= 7 && findAddToTableau(foundationIndex, pileIndex, tableau)) {
 				Card foundationCard = piles.get(foundationIndex).get(piles.get(foundationIndex).size() - 1);
 				
