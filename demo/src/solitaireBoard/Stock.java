@@ -69,9 +69,9 @@ public class Stock {
 					
 					pileStock.remove(counter);
 					drawnPileStock.remove(drawnPileStock.size()-1);
-					if(counter != 0) {
-						counter--;
-					}
+					
+					counter--;
+					
 				} else if (tableau.getPile(pileIndex - 1).size() > 0
 						&& tableau.getPile(pileIndex - 1).get(tableau.getPile(pileIndex - 1).size() - 1)
 								.getNumValue() == currentCard.getNumValue() + 1) {
@@ -81,9 +81,9 @@ public class Stock {
 						
 						pileStock.remove(counter);
 						drawnPileStock.remove(drawnPileStock.size()-1);
-						if(counter != 0) {
-							counter--;
-						}
+						
+						counter--;
+						
 						
 					}
 				}

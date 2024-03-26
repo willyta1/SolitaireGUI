@@ -39,8 +39,8 @@ public class Foundations {
 	 * @param tableau The tableau the card would be added to for one of its pile
 	 */
 	public boolean findAddToTableau(int foundationIndex, int pileIndex, Tableau tableau) {
-		if (foundationIndex >= 1 && foundationIndex <= 4 && pileIndex >= 1 && pileIndex <= 7) {
-			Card foundationCard = piles.get(foundationIndex - 1).get(piles.get(foundationIndex - 1).size() - 1);
+		if (foundationIndex >= 0 && foundationIndex <= 3 && pileIndex >= 1 && pileIndex <= 7) {
+			Card foundationCard = piles.get(foundationIndex).get(piles.get(foundationIndex).size() - 1);
 			Card tableauPileCard = tableau.getPile(pileIndex - 1).get(tableau.getPile(pileIndex - 1).size() - 1);
 			if (foundationCard.getNumValue() + 1 == tableauPileCard.getNumValue()
 					&& foundationCard.color != tableauPileCard.color) {
@@ -60,12 +60,12 @@ public class Foundations {
 	 */
 	public void addToTableau(int foundationIndex, int pileIndex, Tableau tableau) {
 		// remove topmost card from foundation, readd card to pile in tableau
-		if (foundationIndex >= 1 && foundationIndex <= 4 && piles.get(foundationIndex - 1).size() > 0) {
+		if (foundationIndex >= 1 && foundationIndex <= 4 && piles.get(foundationIndex).size() > 0) {
 			if (pileIndex >= 1 && pileIndex <= 7 && findAddToTableau(foundationIndex, pileIndex, tableau)) {
-				Card foundationCard = piles.get(foundationIndex - 1).get(piles.get(foundationIndex - 1).size() - 1);
+				Card foundationCard = piles.get(foundationIndex).get(piles.get(foundationIndex).size() - 1);
 				
 				tableau.addCardInOrder(pileIndex, foundationCard);
-				piles.get(foundationIndex - 1).remove(foundationCard);
+				piles.get(foundationIndex).remove(foundationCard);
 			}
 		}
 

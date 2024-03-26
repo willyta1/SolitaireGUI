@@ -338,7 +338,8 @@ public class Tableau {
 		for (ArrayList<Card> pile: cardPiles) {
 			pileNum++;
 			for (Card searchedCard: pile) {
-				if(searchedCard.getCardName().equals(card)) {
+				String searchedCardString = searchedCard.getCardName();
+				if(searchedCardString.equals(card)) {
 					return pileNum;
 				}
 			}
