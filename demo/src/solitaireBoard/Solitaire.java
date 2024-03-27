@@ -170,4 +170,12 @@ public class Solitaire {
 		return deck;
 	}
 
+	public boolean checkWin() {
+		for (int i = 0; i < foundation.getFoundation().size(); i++) {
+			if(foundation.getFoundationPile(i).size() < 13) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

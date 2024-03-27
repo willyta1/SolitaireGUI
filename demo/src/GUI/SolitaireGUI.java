@@ -8,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -19,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import solitaireBoard.*;
 import solitaireBoard.EnumBoardPosition.BoardPosition;
@@ -34,7 +36,7 @@ public class SolitaireGUI extends Application {
     private Stage stage;
     private HBox HBox;
     private FlowPane flowPane;
-    StackPane stockDrawnSpace;
+    private StackPane stockDrawnSpace;
     private int len; 
     public static void main(String[] args) {
         launch(args);
@@ -525,6 +527,20 @@ public class SolitaireGUI extends Application {
         twoClicksArray.clear();
         double endTime = System.nanoTime();
         System.out.println((endTime - initTime) / 1000000000);
-        solitaire.printBoard();
+        winScreen(stage);
     }
+    public void winScreen(Stage stage) {
+        if(solitaire.checkWin()) {
+            Label winLabel = new Label("You Win!");
+            winLabel.setAlignment(Pos.CENTER);
+            winLabel.setMinSize(200, 200);
+            winLabel.setFont(new Font(200.0));
+            BorderPane pane = new BorderPane(winLabel);
+            pane.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
+            Scene winScene = new Scene(pane, 1440, 768);
+
+            stage.setScene(winScene);
+        }
+    }
+
 }
