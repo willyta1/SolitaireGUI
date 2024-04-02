@@ -82,12 +82,15 @@ public class Tableau {
 
 	public void addCardInOrder(int pileIndex, Card card) {
 		if (pileIndex >= 1 && pileIndex <= 7) {
-			Card cardCopy = getPile(pileIndex - 1).get(getPile(pileIndex - 1).size() - 1);
-			if (cardCopy.getNumValue() == card.getNumValue() + 1) {
-				if (cardCopy.color != card.color) {
-					getPile(pileIndex - 1).add(card);
+			if (getPile(pileIndex - 1).size()>= 1) {
+				Card cardCopy = getPile(pileIndex - 1).get(getPile(pileIndex - 1).size() - 1);
+				if (cardCopy.getNumValue() == card.getNumValue() + 1) {
+					if (cardCopy.color != card.color) {
+						getPile(pileIndex - 1).add(card);
+					}
 				}
 			}
+
 		}
 
 	}
@@ -113,6 +116,8 @@ public class Tableau {
 		return false;
 
 	}
+
+
 
 	public boolean findTableMove(String cardName, int pileIndex, int newPileIndex) {
 		boolean foundCard = false;

@@ -20,6 +20,18 @@ public class Stock {
 		drawnPileStock = new ArrayList<Card>();
 	}
 
+	public Stock copyStock(Stock stock, Deck deck) {
+		Stock copyStock = new Stock();
+		copyStock.counter = stock.counter;
+		for(Card card: stock.pileStock) {
+			copyStock.getPileStock().add(deck.getCardNameAndCard().get(card.getCardName()));
+		}
+		for(Card card: stock.drawnPileStock) {
+			copyStock.getDrawnPileStock().add(deck.getCardNameAndCard().get(card.getCardName()));
+		}
+		return copyStock;
+	}
+
 	/*
 	 * prints the information of the current card that was drawn from the stock
 	 */
@@ -151,10 +163,10 @@ public class Stock {
 
 
 			if (card.getRevealed()) {
-				if (foundation.getFoundationPile(getIndex).isEmpty() && getCurrentCard().getNumValue() == 1) {
+				if (foundation.getFoundationPile(getIndex).isEmpty() && card.getNumValue() == 1) {
 					return true;
-				} else if (foundation.getFoundationPile(getIndex).size() > 0 && getCurrentCard() != null
-						&& getCurrentCard().getNumValue() - 1 == foundation.getFoundationPile(getIndex)
+				} else if (foundation.getFoundationPile(getIndex).size() > 0 && card != null
+						&& card.getNumValue() - 1 == foundation.getFoundationPile(getIndex)
 								.get(foundation.getFoundationPile(getIndex).size() - 1).getNumValue()) {
 					return true;
 				}

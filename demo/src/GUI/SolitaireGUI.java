@@ -3,11 +3,15 @@ package GUI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -57,8 +61,6 @@ public class SolitaireGUI extends Application {
         return scene;
     }
 
-    
-
     public ImageView buildStockGUICard(Image cardImage) {
         ImageView cardImageView = new ImageView();
         cardImageView.setImage(cardImage);
@@ -96,7 +98,6 @@ public class SolitaireGUI extends Application {
 
                 @Override
                 public void handle(MouseEvent arg0) {
-                            // plan: use image to compare cards and strings
                             
                     if (twoClicksArray.size() <= 1) {
                         twoClicksArray.add(card.getCardName());
@@ -398,6 +399,21 @@ public class SolitaireGUI extends Application {
         mainPane.setTop(HBox);
         mainPane.setCenter(flowPane);
 
+        Button restartButton = new Button("Restart");
+        restartButton.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent arg0) {
+                try {
+                    restartGame();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            
+        });
+        mainPane.setBottom(restartButton);
+
         Scene scene = new Scene(mainPane, 1440, 768);
         scene.setFill(Color.GREEN);
 
@@ -414,114 +430,12 @@ public class SolitaireGUI extends Application {
         if (twoClicksArray.size() == 2) {
             Card copyMovedCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
             if (cardAndBoardPositionMap.get(twoClicksArray.get(0)).equals(BoardPosition.STOCK)) {
-                System.out.println(twoClicksArray.get(1));
-                if (boardAndBoardPositionMap.get(twoClicksArray.get(1)) != null &&
-                        boardAndBoardPositionMap.get(twoClicksArray.get(1)) <= 4) {
-                    int foundationIndex = boardAndBoardPositionMap.get(twoClicksArray.get(1));
-                    // Card copyMovedCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
-                    if (solitaire.getStock().findAddToFoundation(copyMovedCard, foundationIndex,
-                            solitaire.getFoundations())) {
-                        solitaire.getStock().addToFoundations(solitaire.getFoundations(), foundationIndex);
-
-                    }
-                    updateStockDrawnPile();
-                    updateFoundations();
-
-                } else if (cardAndBoardPositionMap.get(twoClicksArray.get(1)) != null &&
-                        cardAndBoardPositionMap.get(twoClicksArray.get(1)).equals(BoardPosition.TABLEAU)) {
-                    System.out.println("adgh");
-                    int pileNum = solitaire.getTableau().findPileWithCard(twoClicksArray.get(1));
-                    // Card copyMovedCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
-
-                    if (solitaire.getStock().findIndexAddToTableau(copyMovedCard, pileNum, solitaire.getTableau())) {
-                        solitaire.getStock().addToTableau(pileNum, solitaire.getTableau());
-                    }
-                    updateStockDrawnPile();
-                    updateTableauPiles(pileNum);
-
-                } else if (cardAndBoardPositionMap.get(twoClicksArray.get(1)) != null &&
-                        cardAndBoardPositionMap.get(twoClicksArray.get(1)).equals(BoardPosition.FOUNDATIONS)) {
-                    // Card copyMovedCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
-                    if (solitaire.getStock().findAddToFoundation(copyMovedCard, solitaire.getFoundations())) {
-                        Card destinationCard = (Card) solitaire.getDeck().getCardNameAndCard()
-                                .get(twoClicksArray.get(1));
-                        int foundationIndex = destinationCard.findFoundationIndex();
-                        solitaire.getStock().addToFoundations(solitaire.getFoundations(), foundationIndex);
-                    }
-                    updateStockDrawnPile();
-                    updateFoundations();
-                } else if (boardAndBoardPositionMap.get(twoClicksArray.get(1)) != null
-                        && boardAndBoardPositionMap.get(twoClicksArray.get(1)) >= 8) {
-                    int tableauPile = boardAndBoardPositionMap.get(twoClicksArray.get(1));
-                    solitaire.getStock().addToTableau(tableauPile - 7, solitaire.getTableau());
-                    updateTableauPiles(tableauPile-7);
-                    updateStockDrawnPile();
-                }
+                // System.out.println(twoClicksArray.get(1));
+                handleStockMove(copyMovedCard);
             } else if (cardAndBoardPositionMap.get(twoClicksArray.get(0)).equals(BoardPosition.TABLEAU)) {
-                if (boardAndBoardPositionMap.get(twoClicksArray.get(1)) != null &&
-                        boardAndBoardPositionMap.get(twoClicksArray.get(1)) <= 4) {
-                    int foundationIndex = boardAndBoardPositionMap.get(twoClicksArray.get(1));
-
-                    // Card copyMovedCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
-                    int tableauPile = solitaire.getTableau().findPileWithCard(copyMovedCard.getCardName());
-                    if (solitaire.getTableau().findAddToFoundation(copyMovedCard.getCardName(), tableauPile,
-                            foundationIndex, solitaire.getFoundations())) {
-
-                        solitaire.getTableau().addToFoundations(copyMovedCard.getCardName(), tableauPile,
-                                foundationIndex, solitaire.getFoundations());
-                    }
-                    updateFoundations();
-                    updateTableauPiles(tableauPile);
-                } else if (cardAndBoardPositionMap.get(twoClicksArray.get(1)) != null
-                        && cardAndBoardPositionMap.get(twoClicksArray.get(1)).equals(BoardPosition.FOUNDATIONS)) {
-                    // Card copyMovedCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
-                    Card copyDestinationCard = (Card) solitaire.getDeck().getCardNameAndCard()
-                            .get(twoClicksArray.get(1));
-
-                    int tableauPileIndex = solitaire.getTableau().findPileWithCard(copyMovedCard.getCardName());
-                    int foundationIndex = copyDestinationCard.findFoundationIndex();
-                    solitaire.getTableau().addToFoundations(copyMovedCard.getCardName(), tableauPileIndex,
-                            foundationIndex, solitaire.getFoundations());
-                    updateFoundations();
-                    updateTableauPiles(tableauPileIndex);
-
-                } else if (cardAndBoardPositionMap.get(twoClicksArray.get(1)) != null
-                        && cardAndBoardPositionMap.get(twoClicksArray.get(1)).equals(BoardPosition.TABLEAU)) {
-                    // Card copyMovedCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
-                    Card copyDestinationCard = (Card) solitaire.getDeck().getCardNameAndCard()
-                            .get(twoClicksArray.get(1));
-                    int destPileIndex = solitaire.getTableau().findPileWithCard(copyDestinationCard.getCardName());
-                    int movePileIndex = solitaire.getTableau().findPileWithCard(copyMovedCard.getCardName());
-
-                    if (solitaire.getTableau().findTableMove(copyMovedCard.getCardName(), movePileIndex,
-                            destPileIndex)) {
-                        solitaire.getTableau().movePileCards(copyMovedCard.getCardName(), movePileIndex, destPileIndex);
-                        updateTableauPiles(destPileIndex);
-                        updateTableauPiles(movePileIndex);
-                    }
-                } else if (boardAndBoardPositionMap.get(twoClicksArray.get(1)) != null &&
-                        boardAndBoardPositionMap.get(twoClicksArray.get(1)) >= 8) {
-                    int tableauPile = boardAndBoardPositionMap.get(twoClicksArray.get(1));
-                    // Card copyMovedCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
-                    int movePileIndex = solitaire.getTableau().findPileWithCard(copyMovedCard.getCardName());
-                    solitaire.getTableau().movePileCards(copyMovedCard.getCardName(), movePileIndex, tableauPile - 7);
-                    updateTableauPiles(tableauPile-7);
-                    updateTableauPiles(movePileIndex);
-                }
+                handleTableauMove(copyMovedCard);
             } else if (cardAndBoardPositionMap.get(twoClicksArray.get(0)).equals(BoardPosition.FOUNDATIONS)) {
-                if(cardAndBoardPositionMap.get(twoClicksArray.get(1)).equals(BoardPosition.TABLEAU)) {
-                    Card foundationCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
-                    Card tableauCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(1));
-                    int tableauPileIndex = solitaire.getTableau().findPileWithCard(tableauCard.getCardName());
-                    int foundationIndex = foundationCard.findFoundationIndex();
-
-                    if(solitaire.getFoundations().findAddToTableau(foundationIndex, tableauPileIndex, solitaire.getTableau())) {
-                        solitaire.getFoundations().addToTableau(foundationIndex, tableauPileIndex, solitaire.getTableau());
-                    }
-                    updateTableauPiles(tableauPileIndex);
-                    updateFoundations();
-
-                } 
+                handleFoundationMove(copyMovedCard);
             }
         }
         twoClicksArray.clear();
@@ -531,16 +445,156 @@ public class SolitaireGUI extends Application {
     }
     public void winScreen(Stage stage) {
         if(solitaire.checkWin()) {
+            
+            BorderPane pane = new BorderPane();
+            
+            FlowPane flowPane = new FlowPane(Orientation.VERTICAL);
+            flowPane.setVgap(10);
+            
+            flowPane.setAlignment(Pos.CENTER);
+            Scene winScene = new Scene(pane, 1440, 768);
+
             Label winLabel = new Label("You Win!");
             winLabel.setAlignment(Pos.CENTER);
             winLabel.setMinSize(200, 200);
-            winLabel.setFont(new Font(200.0));
-            BorderPane pane = new BorderPane(winLabel);
+            winLabel.setFont(new Font(150.0));
+
+            HBox restartGameBox = new HBox();
+            restartGameBox.setAlignment(Pos.CENTER);
+            Button restartGame = new Button("Restart");
+            restartGame.setMinSize(100, 50);
+            restartGameBox.getChildren().add(restartGame);
+            restartGame.setOnAction(new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent arg0) {
+                    try {
+                        restartGame();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                
+            });
+
+            flowPane.getChildren().add(winLabel);
+            flowPane.getChildren().add(restartGameBox);
+            pane.setCenter(flowPane);
+            
             pane.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
-            Scene winScene = new Scene(pane, 1440, 768);
+            restartGame.setVisible(true);
 
             stage.setScene(winScene);
+
         }
+    }
+
+    public void restartGame() throws Exception {
+        solitaire = new Solitaire();
+        stage.setScene(createSolitaireBoard(stage));
+
+    }
+
+    public void handleStockMove(Card movedCard) {
+                    if (boardAndBoardPositionMap.get(twoClicksArray.get(1)) != null &&
+                boardAndBoardPositionMap.get(twoClicksArray.get(1)) <= 4) {
+            int foundationIndex = boardAndBoardPositionMap.get(twoClicksArray.get(1));
+            if (solitaire.getStock().findAddToFoundation(movedCard, foundationIndex,
+                    solitaire.getFoundations())) {
+                solitaire.getStock().addToFoundations(solitaire.getFoundations(), foundationIndex);
+            }
+            updateStockDrawnPile();
+            updateFoundations();
+
+        } else if (cardAndBoardPositionMap.get(twoClicksArray.get(1)) != null &&
+                cardAndBoardPositionMap.get(twoClicksArray.get(1)).equals(BoardPosition.TABLEAU)) {
+            System.out.println("adgh");
+            int pileNum = solitaire.getTableau().findPileWithCard(twoClicksArray.get(1));
+            if (solitaire.getStock().findIndexAddToTableau(movedCard, pileNum, solitaire.getTableau())) {
+                solitaire.getStock().addToTableau(pileNum, solitaire.getTableau());
+            }
+            updateStockDrawnPile();
+            updateTableauPiles(pileNum);
+
+        } else if (cardAndBoardPositionMap.get(twoClicksArray.get(1)) != null &&
+                cardAndBoardPositionMap.get(twoClicksArray.get(1)).equals(BoardPosition.FOUNDATIONS)) {
+            if (solitaire.getStock().findAddToFoundation(movedCard, solitaire.getFoundations())) {
+                Card destinationCard = (Card) solitaire.getDeck().getCardNameAndCard()
+                        .get(twoClicksArray.get(1));
+                int foundationIndex = destinationCard.findFoundationIndex();
+                solitaire.getStock().addToFoundations(solitaire.getFoundations(), foundationIndex);
+            }
+            updateStockDrawnPile();
+            updateFoundations();
+        } else if (boardAndBoardPositionMap.get(twoClicksArray.get(1)) != null
+                && boardAndBoardPositionMap.get(twoClicksArray.get(1)) >= 8) {
+            int tableauPile = boardAndBoardPositionMap.get(twoClicksArray.get(1));
+            solitaire.getStock().addToTableau(tableauPile - 7, solitaire.getTableau());
+            updateTableauPiles(tableauPile - 7);
+            updateStockDrawnPile();
+        }
+    }
+
+    public void handleTableauMove(Card movedCard) {
+        if (boardAndBoardPositionMap.get(twoClicksArray.get(1)) != null &&
+                boardAndBoardPositionMap.get(twoClicksArray.get(1)) <= 4) {
+            int foundationIndex = boardAndBoardPositionMap.get(twoClicksArray.get(1));
+            int tableauPile = solitaire.getTableau().findPileWithCard(movedCard.getCardName());
+            if (solitaire.getTableau().findAddToFoundation(movedCard.getCardName(), tableauPile,
+                    foundationIndex, solitaire.getFoundations())) {
+                solitaire.getTableau().addToFoundations(movedCard.getCardName(), tableauPile,
+                        foundationIndex, solitaire.getFoundations());
+            }
+            updateFoundations();
+            updateTableauPiles(tableauPile);
+        } else if (cardAndBoardPositionMap.get(twoClicksArray.get(1)) != null
+                && cardAndBoardPositionMap.get(twoClicksArray.get(1)).equals(BoardPosition.FOUNDATIONS)) {
+            Card copyDestinationCard = (Card) solitaire.getDeck().getCardNameAndCard()
+                    .get(twoClicksArray.get(1));
+            int tableauPileIndex = solitaire.getTableau().findPileWithCard(movedCard.getCardName());
+            int foundationIndex = copyDestinationCard.findFoundationIndex();
+            solitaire.getTableau().addToFoundations(movedCard.getCardName(), tableauPileIndex,
+                    foundationIndex, solitaire.getFoundations());
+            updateFoundations();
+            updateTableauPiles(tableauPileIndex);
+
+        } else if (cardAndBoardPositionMap.get(twoClicksArray.get(1)) != null
+                && cardAndBoardPositionMap.get(twoClicksArray.get(1)).equals(BoardPosition.TABLEAU)) {
+            Card copyDestinationCard = (Card) solitaire.getDeck().getCardNameAndCard()
+                    .get(twoClicksArray.get(1));
+            int destPileIndex = solitaire.getTableau().findPileWithCard(copyDestinationCard.getCardName());
+            int movePileIndex = solitaire.getTableau().findPileWithCard(movedCard.getCardName());
+
+            if (solitaire.getTableau().findTableMove(movedCard.getCardName(), movePileIndex,
+                    destPileIndex)) {
+                solitaire.getTableau().movePileCards(movedCard.getCardName(), movePileIndex, destPileIndex);
+                updateTableauPiles(destPileIndex);
+                updateTableauPiles(movePileIndex);
+            }
+        } else if (boardAndBoardPositionMap.get(twoClicksArray.get(1)) != null &&
+                boardAndBoardPositionMap.get(twoClicksArray.get(1)) >= 8) {
+            int tableauPile = boardAndBoardPositionMap.get(twoClicksArray.get(1));
+            int movePileIndex = solitaire.getTableau().findPileWithCard(movedCard.getCardName());
+            solitaire.getTableau().movePileCards(movedCard.getCardName(), movePileIndex, tableauPile - 7);
+            updateTableauPiles(tableauPile - 7);
+            updateTableauPiles(movePileIndex);
+        }
+    }
+
+    public void handleFoundationMove(Card movedCard) {
+        if(cardAndBoardPositionMap.get(twoClicksArray.get(1)).equals(BoardPosition.TABLEAU)) {
+            // Card foundationCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(0));
+            Card tableauCard = (Card) solitaire.getDeck().getCardNameAndCard().get(twoClicksArray.get(1));
+            int tableauPileIndex = solitaire.getTableau().findPileWithCard(tableauCard.getCardName());
+            int foundationIndex = movedCard.findFoundationIndex();
+
+            if(solitaire.getFoundations().findAddToTableau(foundationIndex, tableauPileIndex, solitaire.getTableau())) {
+                solitaire.getFoundations().addToTableau(foundationIndex, tableauPileIndex, solitaire.getTableau());
+            }
+            updateTableauPiles(tableauPileIndex);
+            updateFoundations();
+
+        } 
     }
 
 }

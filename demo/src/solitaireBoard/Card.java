@@ -156,21 +156,24 @@ public class Card {
 	}
 
 
-
+	/**
+	 * Finds the index where the card should be placed
+	 * @return foundationPileIndex the ArrayList index of the pile
+	 */
 	public int findFoundationIndex() {
 		char symbol = cardName.charAt(cardName.length() - 1);
-		int pileIndex;
+		int foundationPileIndex;
 
 		if (symbol == 'D') {
-			pileIndex = 0;
+			foundationPileIndex = 0;
 		} else if (symbol == 'H') {
-			pileIndex = 1;
+			foundationPileIndex = 1;
 		} else if (symbol == 'C') {
-			pileIndex = 2;
+			foundationPileIndex = 2;
 		} else {
-			pileIndex = 3;
+			foundationPileIndex = 3;
 		}
-		return pileIndex;
+		return foundationPileIndex;
 	}
 
 }

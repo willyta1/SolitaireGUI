@@ -41,11 +41,14 @@ public class Foundations {
 	public boolean findAddToTableau(int foundationIndex, int pileIndex, Tableau tableau) {
 		if (foundationIndex >= 0 && foundationIndex <= 3 && pileIndex >= 1 && pileIndex <= 7) {
 			Card foundationCard = piles.get(foundationIndex).get(piles.get(foundationIndex).size() - 1);
-			Card tableauPileCard = tableau.getPile(pileIndex - 1).get(tableau.getPile(pileIndex - 1).size() - 1);
-			if (foundationCard.getNumValue() + 1 == tableauPileCard.getNumValue()
-					&& foundationCard.color != tableauPileCard.color) {
-				return true;
+			if(tableau.getPile(pileIndex - 1).size() >= 1) {
+				Card tableauPileCard = tableau.getPile(pileIndex - 1).get(tableau.getPile(pileIndex - 1).size() - 1);
+				if (foundationCard.getNumValue() + 1 == tableauPileCard.getNumValue()
+						&& foundationCard.color != tableauPileCard.color) {
+					return true;
+				}
 			}
+
 		}
 		return false;
 
@@ -79,5 +82,25 @@ public class Foundations {
 
 	public ArrayList<Card> getFoundationPile(int index) {
 		return piles.get(index);
+	}
+
+	/**
+	 * Creates a copy of a foundation
+	 * @param deck The deck of cards will all the card data
+	 * @return newFoundations the copy of the Foundations
+	 */
+	public Foundations copyFoundations(Deck deck) {
+		Foundations newFoundations = new Foundations();
+		ArrayList<ArrayList<Card>> copyPiles = getFoundation();
+		int pileIndex = 0;
+		for (ArrayList<Card> pile : copyPiles) {
+			for (Card card : pile) {
+				newFoundations.getFoundationPile(pileIndex).add(deck.getImageAndCard().get(card.getPngName()));
+			}
+			pileIndex++;
+
+		}
+		return newFoundations;
+
 	}
 }

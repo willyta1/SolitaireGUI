@@ -42,17 +42,25 @@ public class Solitaire {
 	 * @return counter The total number of significant moves advancing board state
 	 */
 	public int findSignficantFoundationMove() {
+		// Make copies of tableau and foundations to avoid changing the real game
 		Tableau copyTableau = new Tableau();
+		Foundations copyFoundations = new Foundations();
+		copyFoundations = foundation.copyFoundations(deck);
 		int counter = 0;
-		for (int i = 0; i < foundation.getFoundation().size(); i++) {
-			for (int j = 0; j < tableau.getCardPiles().size(); j++) {
-				if (foundation.getFoundation().get(i).size() > 0) {
-					Card foundationLargest = foundation.getFoundation().get(i)
-							.get(foundation.getFoundation().get(i).size() - 1);
-					if (foundation.findAddToTableau(i, j, tableau)) {
+
+
+		for (int i = 0; i < copyFoundations.getFoundation().size(); i++) {
+			for (int j = 1; j < copyTableau.getCardPiles().size()+1; j++) {
+				if (copyFoundations.getFoundation().get(i).size() > 0) {
+					Card foundationLargest = copyFoundations.getFoundation().get(i)
+							.get(copyFoundations.getFoundation().get(i).size() - 1);
+					// takes "top most" card from foundations
+
+					if (copyFoundations.findAddToTableau(i, j, copyTableau)) {
 						copyTableau = tableau.copyTableau(deck);
 						copyTableau.addCardInOrder(j, foundationLargest);
-						// note: i did not remove from the foundation
+						// if we can add it to the table, and it results in revealing another card
+						// we have a significant move					
 						if (copyTableau.findSignificantBoardMove()) {
 							counter++;
 						}
@@ -78,13 +86,15 @@ public class Solitaire {
 	public int findSignficantStockMove() {
 		Tableau copyTableau = tableau.copyTableau(deck);
 		int counter = 0;
+		
+		Stock copyStock = stock.copyStock(stock, deck);
 
-		for (Card card : stock.getPileStock()) {
-			if (stock.findAddToFoundation(card, foundation)) {
+		for (Card card : copyStock.getPileStock()) {
+			if (copyStock.findAddToFoundation(card, foundation)) {
 				counter++;
-			} else if (stock.findAddToTableau(card, copyTableau) >= 0) {
+			} else if (copyStock.findAddToTableau(card, copyTableau) >= 0) {
 				copyTableau = tableau.copyTableau(deck);
-				copyTableau.addCardInOrder(stock.findAddToTableau(card, copyTableau) + 1, card);
+				copyTableau.addCardInOrder(copyStock.findAddToTableau(card, copyTableau) + 1, card);
 				if (copyTableau.findSignificantBoardMove()) {
 					counter++;
 				}
@@ -101,15 +111,15 @@ public class Solitaire {
 	 */
 	public int findSignificantTableMove() {
 		int counter = 0;
-		Tableau copyTableau = new Tableau();
-		for (int i = 0; i < tableau.getCardPiles().size(); i++) {
-			for (int j = tableau.getPile(i).size() - 1; j > -1; j--) {
-				if (tableau.getPile(i).get(j).getRevealed()) {
-					for (int k = 0; k < tableau.getCardPiles().size(); k++) {
-						if (k != i && tableau.getPile(i).get(j).getRevealed()) {
-							if (tableau.findTableMove(tableau.getPile(i).get(j).getCardName(), i, k)) {
-								copyTableau = tableau.copyTableau(deck);
-								copyTableau.movePileCards(tableau.getPile(i).get(j).getCardName(), i, k);
+		Tableau copyTableau = tableau.copyTableau(deck);
+		for (int i = 0; i < copyTableau.getCardPiles().size(); i++) {
+			for (int j = copyTableau.getPile(i).size() - 1; j > -1; j--) {
+				if (copyTableau.getPile(i).get(j).getRevealed()) {
+					for (int k = 0; k < copyTableau.getCardPiles().size(); k++) {
+						if (k != i && copyTableau.getPile(i).get(j).getRevealed()) {
+							if (copyTableau.findTableMove(copyTableau.getPile(i).get(j).getCardName(), i, k)) {
+								
+								copyTableau.movePileCards(copyTableau.getPile(i).get(j).getCardName(), i, k);
 								if (copyTableau.findSignificantBoardMove()) {
 									counter++;
 								}
@@ -119,17 +129,23 @@ public class Solitaire {
 				}
 			}
 		}
+		Foundations copyFoundations = foundation.copyFoundations(deck);
+		copyTableau = tableau.copyTableau(deck);
+		for (int i = 1; i < copyTableau.getCardPiles().size() + 1; i++) {
+			if (copyTableau.getPile(i - 1).size() - 1 >= 0) {
+				if (tableau.findAddToFoundation(tableau.getPile(i - 1).get(copyTableau.getPile(i - 1).size() - 1).getCardName(),
+					i, copyFoundations)) {
+					// copyTableau = tableau.copyTableau(deck);
+					copyTableau.addToFoundations(
+						copyTableau.getPile(i - 1).get(tableau.getPile(i - 1).size() - 1).getCardName(), i, copyFoundations);
 
-		for (int i = 1; i < tableau.getCardPiles().size() + 1; i++) {
-			if (tableau.findAddToFoundation(tableau.getPile(i - 1).get(tableau.getPile(i - 1).size() - 1).getCardName(),
-					i, foundation)) {
-				copyTableau = tableau.copyTableau(deck);
-				copyTableau.addToFoundations(
-						tableau.getPile(i - 1).get(tableau.getPile(i - 1).size() - 1).getCardName(), i, foundation);
-				if (copyTableau.findSignificantBoardMove()) {
 					counter++;
+					if (copyTableau.findSignificantBoardMove()) {
+						counter++;
+					}
 				}
 			}
+
 		}
 		return counter;
 	}

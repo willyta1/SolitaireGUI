@@ -1,5 +1,6 @@
 package solitaireBoard;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -56,7 +57,7 @@ public class Deck {
 	 * @param stock The stock receiving the distributed cards
 	 */
 	public void distributeDeck(Tableau tableau, Stock stock) {
-		Collections.shuffle(deckOfCards);
+		Collections.shuffle(deckOfCards, new SecureRandom());
 
 		int count = 0;
 		for (int i = 1; i < 8; i++) {
