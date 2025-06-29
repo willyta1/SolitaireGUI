@@ -10,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -42,6 +43,7 @@ public class SolitaireGUI extends Application {
     private FlowPane flowPane;
     private StackPane stockDrawnSpace;
     private int len; 
+    private BorderPane mainPane = new BorderPane();
     
     public static void main(String[] args) {
         launch(args);
@@ -58,6 +60,8 @@ public class SolitaireGUI extends Application {
     }
 
     public Scene createSolitaireBoard(Stage stage) {
+    	
+
         Scene scene = refresh(stage);
         return scene;
     }
@@ -110,7 +114,7 @@ public class SolitaireGUI extends Application {
                 }
             });
         } else {
-            image = new Image("file:" + Card.relativePath + "/cardBack.png");
+            image = new Image(getClass().getResource("/CardPNGs/cardBack.png").toExternalForm());
             imageView = new ImageView(image);
             imageView.setFitWidth(image.getWidth() * 0.152);
             imageView.setFitHeight(image.getHeight() * 0.152);
@@ -218,7 +222,7 @@ public class SolitaireGUI extends Application {
             
             foundationGUIPiles.get(i).getChildren().clear();
             ImageView foundationImage = new ImageView();
-            Image image = new Image("file:" + Card.relativePath + "/foundationspace.png");
+            Image image = new Image(getClass().getResource("/CardPNGs/foundationspace.png").toExternalForm());
             foundationImage.setImage(image);
 
             String foundationPileString = "foundationpile" + (i + 1);
@@ -339,28 +343,35 @@ public class SolitaireGUI extends Application {
     public Scene refresh(Stage stage) {
         // flowPane holds the Tableau
         FlowPane flowPane = new FlowPane();
+
         this.flowPane = flowPane;
+        
         flowPane.setHgap(30);
         flowPane.setAlignment(Pos.TOP_CENTER);
-        BorderPane mainPane = new BorderPane();
+        
+        mainPane = new BorderPane();
         mainPane.setBackground(new Background(new BackgroundFill(Color.GREEN, null, null)));
 
         HBox HBox = new HBox();
         HBox.setAlignment(Pos.TOP_CENTER);
         HBox.setPrefSize(650, 160);
-        this.HBox = HBox;
-        StackPane stockPane = new StackPane();
 
+        
+        this.HBox = HBox;
+        
+        StackPane stockPane = new StackPane();
+        
         ImageView stockPileEmpty = new ImageView();
-        Image stockPileEmptyImage = new Image("file:" + Card.relativePath + "/stockspaceempty.png");
+        Image stockPileEmptyImage = new Image(getClass().getResource("/CardPNGs/stockspaceempty.png").toExternalForm());
         stockPileEmpty.setFitHeight(stockPileEmptyImage.getHeight() * 0.9);
         stockPileEmpty.setFitWidth(stockPileEmptyImage.getWidth() * 0.87);
         stockPileEmpty.setImage(stockPileEmptyImage);
 
         ImageView stockPile = new ImageView();
-        Image stockPileImage = new Image("file:" + Card.relativePath +"/cardBack.png");
+        Image stockPileImage = new Image(getClass().getResource("/CardPNGs/cardBack.png").toExternalForm());
 
         StackPane stockDrawnSpace = new StackPane();
+        stockDrawnSpace.getChildren().clear();
         this.stockDrawnSpace = stockDrawnSpace;
         stockDrawnSpace.setAlignment(Pos.TOP_LEFT);
         stockDrawnSpace.setPadding(new Insets(10, 0, 0, 10));
@@ -491,8 +502,50 @@ public class SolitaireGUI extends Application {
     }
 
     public void restartGame() throws Exception {
+        
         solitaire = new Solitaire();
+        mainPane.getChildren().clear();
+        mainPane = null;
+        if (this.flowPane != null) {
+        	this.flowPane.getChildren().clear();
+        }
+        for (Node node: HBox.getChildren()) {
+        	node = null;
+        }
+        HBox.getChildren().clear();
+        this.cardAndBoardPositionMap.clear();
+        this.boardAndBoardPositionMap.clear();
+        
+        for (StackPane panel: tableauGUIPiles) {
+        	
+        	for (Node node: panel.getChildren()) {
+        		if (node instanceof ImageView) {
+        			((ImageView) node).setImage(null);
+        		}
+        	}
+        }
+        for (StackPane panel: foundationGUIPiles) {
+        	
+        	for (Node node: panel.getChildren()) {
+        		if (node instanceof ImageView) {
+        			((ImageView) node).setImage(null);
+        		}
+        	}
+        }
+        this.tableauGUIPiles.clear();
+        
+        for (Node node: stockDrawnSpace.getChildren()) {
+        	if (node instanceof ImageView) {
+        		((ImageView) node).setImage(null);
+        	}
+        }
+        
+        
+        
+
+        
         stage.setScene(createSolitaireBoard(stage));
+//        System.gc();
 
     }
 

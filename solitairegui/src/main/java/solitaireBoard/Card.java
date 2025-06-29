@@ -19,8 +19,6 @@ public class Card {
 	 * Q > 10 > 1)
 	 * 
 	 * 
-	 * 
-	 * 
 	 */
 
 
@@ -78,17 +76,18 @@ public class Card {
 			// Issue: causes an error for running without gui components in a
 			// non-gui environment
 		
-		InputStream stream;
+		
 		try {
 			// String copyRelativePath = "demo/src/CardPNGs/";
-			Path imagePath = Paths.get(relativePath +pngName + ".png");
-			System.out.println(Files.exists(Paths.get(relativePath +pngName + ".png")));
-			imagePath = Paths.get( relativePath +pngName + ".png");
-			stream = Files.newInputStream(Paths.get(relativePath + "/" + pngName + ".png"));
+
+			InputStream stream = getClass().getResourceAsStream("/CardPNGs/" + pngName + ".png");
 			BufferedImage bufferedImage = ImageIO.read(stream);
+			
+			
 			cardImage = SwingFXUtils.toFXImage(bufferedImage, null);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			System.out.println("Asdfgg");
 			e.printStackTrace();
 		}
 	}
