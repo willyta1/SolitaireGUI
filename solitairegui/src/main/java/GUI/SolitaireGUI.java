@@ -32,10 +32,11 @@ import solitaireBoard.EnumBoardPosition.BoardPosition;
 
 public class SolitaireGUI extends Application {
     private Solitaire solitaire = new Solitaire();
+    private Map<String,ImageView> images = new HashMap<String,ImageView>();
     private Map<String, BoardPosition> cardAndBoardPositionMap = new HashMap<>();
     private Map<String, Integer> boardAndBoardPositionMap = new HashMap<>();
     private ArrayList<String> twoClicksArray = new ArrayList<>();
-
+    
     private ArrayList<StackPane> foundationGUIPiles = new ArrayList<>();
     private ArrayList<StackPane> tableauGUIPiles = new ArrayList<>();
     private Stage stage;
@@ -503,7 +504,7 @@ public class SolitaireGUI extends Application {
 
     public void restartGame() throws Exception {
         
-        solitaire = new Solitaire();
+        solitaire.getDeck().distributeDeck(solitaire.getTableau(), solitaire.getStock());
         mainPane.getChildren().clear();
         mainPane = null;
         if (this.flowPane != null) {
@@ -539,10 +540,6 @@ public class SolitaireGUI extends Application {
         		((ImageView) node).setImage(null);
         	}
         }
-        
-        
-        
-
         
         stage.setScene(createSolitaireBoard(stage));
 //        System.gc();

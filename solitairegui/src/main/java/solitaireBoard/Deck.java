@@ -58,7 +58,12 @@ public class Deck {
 	 */
 	public void distributeDeck(Tableau tableau, Stock stock) {
 		Collections.shuffle(deckOfCards, new SecureRandom());
-
+		for( Card card: deckOfCards) {
+			card.setCardRevealed(false);
+		}
+		tableau.resetTableau();
+		stock.resetStock();
+		
 		int count = 0;
 		for (int i = 1; i < 8; i++) {
 			for (int j = i; j > 0; j--) {
