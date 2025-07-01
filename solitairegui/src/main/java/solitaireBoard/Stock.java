@@ -236,4 +236,10 @@ public class Stock {
 		return drawnPileStock;
 		
 	}
+	
+	public void resetStock() {
+		pileStock = new ArrayList<Card>();
+		counter = -1;
+		drawnPileStock = new ArrayList<Card>();
+	}
 }

@@ -353,4 +353,11 @@ public class Tableau {
 		return 0;
 
 	}
+	
+	public void resetTableau() {
+		cardPiles = new ArrayList<ArrayList<Card>>();
+		for (int i = 0; i < 7; i++) {
+			cardPiles.add(new ArrayList<Card>());
+		}
+	}
 }
